@@ -1,0 +1,284 @@
+/* Module 05 - roadmap page logic (merged from SQL Roadmap).
+   Carried over unchanged; it binds to the same element ids. */
+(function(){
+(function () {
+  SQLR.mountNav("roadmap");
+  var $ = function (id) { return document.getElementById(id); };
+
+  var me = SQLR.store.student();
+  if (!me) { location.replace("join.html"); return; }
+  $("hello").textContent = me.name + " · @" + me.github;
+  $("foot-user").textContent = "@" + me.github;
+
+  var solved = SQLR.store.solved();
+  var verified = SQLR.store.verified();
+  var DATA = null;
+  var filters = { q: "", access: "all", plat: "all", todo: false };
+  var openChapters = {};
+
+  /* ---------- sync ---------- */
+  var pending = 0;
+  function setStatus(kind, html) {
+    $("status").innerHTML = html ? '<div class="banner ' + kind + '">' + html + "</div>" : "";
+  }
+  function syncNote() {
+    if (!SQLR.online) {
+      setStatus("warn", "<span>⚑</span><div><b>Class sheet not connected.</b> Progress is saved in " +
+        "this browser only — it will not reach the leaderboard until the instructor adds the " +
+        'Apps Script URL to <span class="mono">assets/config.js</span>.</div>');
+    } else if (pending > 0) {
+      setStatus("", "<span>↻</span><div>Saving " + pending + " change" + (pending > 1 ? "s" : "") + "…</div>");
+    } else {
+      setStatus("", "");
+    }
+  }
+
+  function pushSolve(p, isSolved, ts) {
+    if (!SQLR.online) return;
+    pending++; syncNote();
+    SQLR.post("solve", {
+      github: me.github, name: me.name, problemId: p.id, chapter: p.ch,
+      title: p.n, platform: p.p, difficulty: p.d, points: SQLR.points(p),
+      solved: isSolved, at: ts
+    }).then(function (res) {
+      if (!res || !res.ok) throw new Error("rejected");
+    }).catch(function () {
+      SQLR.enqueue("solve", { problemId: p.id, solved: isSolved, at: ts });
+      setStatus("bad", "<span>⚠</span><div><b>Could not reach the class sheet.</b> Your progress is " +
+        "safe in this browser and will be re-sent next time you open the page.</div>");
+    }).then(function () {
+      pending = Math.max(0, pending - 1);
+      if (pending === 0 && !document.querySelector("#status .bad")) syncNote();
+    });
+  }
+
+  /* ---------- rendering ---------- */
+  function visible(p) {
+    if (filters.access === "free" && p.prem) return false;
+    if (filters.access === "prem" && !p.prem) return false;
+    if (filters.plat !== "all" && p.p !== filters.plat) return false;
+    if (filters.todo && solved[p.id]) return false;
+    if (filters.q && p.n.toLowerCase().indexOf(filters.q) === -1) return false;
+    return true;
+  }
+
+  function totals() {
+    var t = { done: 0, pts: 0, all: DATA.problems.length, allPts: 0, week: 0, verified: 0 };
+    var thisWeek = SQLR.isoWeek(new Date());
+    DATA.problems.forEach(function (p) {
+      t.allPts += SQLR.points(p);
+      if (solved[p.id]) {
+        t.done++; t.pts += SQLR.points(p);
+        if (verified[p.id]) t.verified++;
+        if (SQLR.isoWeek(new Date(solved[p.id])) === thisWeek) t.week += SQLR.points(p);
+      }
+    });
+    return t;
+  }
+
+  function renderStats() {
+    var t = totals();
+    $("stats").innerHTML =
+      '<div class="stat"><b>' + t.done + "</b><span>Solved of " + t.all + "</span></div>" +
+      '<div class="stat"><b>' + t.pts.toLocaleString() + "</b><span>Points</span></div>" +
+      '<div class="stat"><b>' + t.week.toLocaleString() + "</b><span>This week</span></div>" +
+      '<div class="stat"><b>' + t.verified + "</b><span>Verified</span></div>" +
+      '<div class="stat"><b>' + Math.round(t.done / t.all * 100) + "%</b><span>Complete</span></div>";
+    $("overall").firstElementChild.style.width = (t.done / t.all * 100) + "%";
+  }
+
+  function problemRow(p) {
+    var done = !!solved[p.id];
+    return '<div class="prob' + (done ? " done" : "") + '" data-id="' + p.id + '">' +
+      '<input class="tick" type="checkbox" ' + (done ? "checked" : "") +
+        ' aria-label="Mark ' + SQLR.esc(p.n) + ' solved">' +
+      '<span class="p-main"><a class="p-name" href="' + SQLR.esc(p.u) + '" target="_blank" rel="noopener">' +
+        SQLR.esc(p.n) + "</a></span>" +
+      (verified[p.id] ? '<span class="tag t-ok" title="Confirmed on ' + p.p +
+        '">&#10003; verified</span>' : "") +
+      (p.d ? '<span class="tag t-' + p.d + '">' + p.d + "</span>" : "") +
+      '<span class="tag t-plat p-plat">' + p.p + "</span>" +
+      '<span class="ch-meta">' + SQLR.points(p) + "</span>" +
+      "</div>";
+  }
+
+  function render() {
+    var byCh = {};
+    DATA.problems.forEach(function (p) {
+      (byCh[p.ch] || (byCh[p.ch] = [])).push(p);
+    });
+
+    var html = DATA.chapters.map(function (ch, i) {
+      var all = byCh[ch] || [];
+      var shown = all.filter(visible);
+      if (!shown.length) return "";
+      var done = all.filter(function (p) { return solved[p.id]; }).length;
+      var pct = Math.round(done / all.length * 100);
+      var open = openChapters[ch];
+      var free = shown.filter(function (p) { return !p.prem; });
+      var prem = shown.filter(function (p) { return p.prem; });
+
+      return '<section class="chapter">' +
+        '<button class="ch-head" aria-expanded="' + (open ? "true" : "false") + '" data-ch="' + SQLR.esc(ch) + '">' +
+          '<span class="ch-idx">' + String(i + 1).padStart(2, "0") + "</span>" +
+          '<span class="ch-name">' + SQLR.esc(ch) + "</span>" +
+          '<span class="bar ch-bar"><i style="width:' + pct + '%"></i></span>' +
+          '<span class="ch-meta">' + done + "/" + all.length + "</span>" +
+          '<svg class="caret" width="14" height="14" viewBox="0 0 16 16" aria-hidden="true">' +
+            '<path d="M6 3l5 5-5 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>' +
+        "</button>" +
+        (open ? '<div class="ch-body">' +
+          free.map(problemRow).join("") +
+          (prem.length ? '<div class="subhead"><span>🔒</span> Premium — needs a LeetCode subscription (' +
+            prem.length + ")</div>" + prem.map(problemRow).join("") : "") +
+          "</div>" : "") +
+        "</section>";
+    }).join("");
+
+    $("list").innerHTML = html || '<div class="card"><div class="empty">No problem matches those filters.</div></div>';
+    renderStats();
+  }
+
+  /* ---------- events ---------- */
+  $("list").addEventListener("click", function (e) {
+    var head = e.target.closest(".ch-head");
+    if (head) {
+      var ch = head.dataset.ch;
+      openChapters[ch] = !openChapters[ch];
+      render();
+      return;
+    }
+  });
+
+  $("list").addEventListener("change", function (e) {
+    if (!e.target.classList.contains("tick")) return;
+    var row = e.target.closest(".prob");
+    var p = DATA.problems.filter(function (x) { return x.id === row.dataset.id; })[0];
+    if (!p) return;
+    var now = new Date().toISOString();
+    if (e.target.checked) { solved[p.id] = now; } else { delete solved[p.id]; }
+    SQLR.store.setSolved(solved);
+    row.classList.toggle("done", e.target.checked);
+    renderStats();
+    // keep chapter counters honest without collapsing the section
+    var head = row.closest(".chapter").querySelector(".ch-head");
+    var chName = head.dataset.ch;
+    var all = DATA.problems.filter(function (x) { return x.ch === chName; });
+    var done = all.filter(function (x) { return solved[x.id]; }).length;
+    head.querySelector(".ch-meta").textContent = done + "/" + all.length;
+    head.querySelector(".ch-bar i").style.width = Math.round(done / all.length * 100) + "%";
+    pushSolve(p, e.target.checked, now);
+    if (filters.todo && e.target.checked) setTimeout(render, 450);
+  });
+
+  function wireGroup(id, key) {
+    $(id).addEventListener("click", function (e) {
+      var b = e.target.closest("button");
+      if (!b) return;
+      filters[key] = b.dataset.v;
+      [].forEach.call(this.children, function (c) { c.setAttribute("aria-pressed", String(c === b)); });
+      render();
+    });
+  }
+  wireGroup("f-access", "access");
+  wireGroup("f-plat", "plat");
+
+  $("f-todo").addEventListener("click", function () {
+    filters.todo = !filters.todo;
+    this.setAttribute("aria-pressed", String(filters.todo));
+    render();
+  });
+
+  var qt;
+  $("q").addEventListener("input", function () {
+    var v = this.value.trim().toLowerCase();
+    clearTimeout(qt);
+    qt = setTimeout(function () {
+      filters.q = v;
+      if (v) DATA.chapters.forEach(function (c) { openChapters[c] = true; });
+      render();
+    }, 160);
+  });
+
+  /* ---------- ask the platforms what was actually solved ---------- */
+
+  function applyVerification(res) {
+    if (!res || !res.ok) return false;
+    if (res.solved) { solved = res.solved; SQLR.store.setSolved(solved); }
+    if (res.verified) { verified = res.verified; SQLR.store.setVerified(verified); }
+    try { localStorage.setItem("sqlr.lastVerify", String(Date.now())); } catch (e) {}
+    render();
+    return true;
+  }
+
+  /**
+   * Opening the page re-checks the platforms, at most once an hour per browser.
+   * The 30-minute server sweep is the real engine; this just means a student who
+   * comes back to look at their score sees a current one.
+   */
+  function autoVerify() {
+    if (!SQLR.online) return;
+    var last = 0;
+    try { last = Number(localStorage.getItem("sqlr.lastVerify") || 0); } catch (e) {}
+    if (Date.now() - last < 3600000) return;
+    SQLR.get("verify", { github: me.github }).then(applyVerification).catch(function () {});
+  }
+
+  $("verify").addEventListener("click", function () {
+    if (!SQLR.online) {
+      setStatus("warn", "<span>\u2691</span><div>Submission checking needs the class sheet. " +
+        "It reads your LeetCode and HackerRank profiles from the server, which the browser " +
+        "cannot do directly.</div>");
+      return;
+    }
+    var btn = this;
+    btn.disabled = true;
+    btn.textContent = "Checking\u2026";
+    setStatus("", "<span>\u21bb</span><div>Reading your LeetCode and HackerRank profiles\u2026</div>");
+    SQLR.get("verify", { github: me.github }).then(function (res) {
+      if (!res || !res.ok) throw new Error((res && res.error) || "The check did not complete.");
+      applyVerification(res);
+      var found = (res.newlySolved || 0) + (res.newlyVerified || 0);
+      setStatus(found ? "good" : "", "<span>" + (found ? "\u2713" : "\u2139") + "</span><div>" +
+        (res.newlySolved ? "<b>" + res.newlySolved + " solved on a platform but not ticked here</b> \u2014 added. " : "") +
+        (res.newlyVerified ? "<b>" + res.newlyVerified + " newly verified.</b> " : "") +
+        (found ? "" : "Nothing new. LeetCode only exposes your last 20 accepted submissions, " +
+          "so anything older is picked up by the batch check rather than here.") +
+        "</div>");
+    }).catch(function (err) {
+      setStatus("bad", "<span>\u26a0</span><div><b>Could not check your submissions.</b> " +
+        SQLR.esc(err.message) + "</div>");
+    }).then(function () {
+      btn.disabled = false;
+      btn.textContent = "Check my submissions";
+    });
+  });
+
+  /* ---------- boot ---------- */
+  syncNote();
+  SQLR.roadmap().then(function (data) {
+    DATA = data;
+    // open the first chapter that still has unsolved problems
+    var first = data.chapters.filter(function (ch) {
+      return data.problems.some(function (p) { return p.ch === ch && !solved[p.id]; });
+    })[0] || data.chapters[0];
+    openChapters[first] = true;
+    render();
+
+    // pull server-side progress (another device may be ahead of this one)
+    return SQLR.get("student", { github: me.github }).then(function (res) {
+      if (res && res.ok && res.solved) {
+        var changed = false;
+        Object.keys(res.solved).forEach(function (id) {
+          if (!solved[id]) { solved[id] = res.solved[id]; changed = true; }
+        });
+        if (res.verified) { verified = res.verified; SQLR.store.setVerified(verified); changed = true; }
+        if (changed) { SQLR.store.setSolved(solved); render(); }
+      }
+      return SQLR.flushQueue();
+    }).then(autoVerify).catch(function () {});
+  }).catch(function (err) {
+    $("list").innerHTML = '<div class="card"><div class="empty">' + SQLR.esc(err.message) + "</div></div>";
+  });
+})();
+})();

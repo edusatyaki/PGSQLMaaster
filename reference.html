@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Function reference — PostgreSQL Master</title>
+<meta name="description" content="459 PostgreSQL functions across 21 categories, each with a runnable example and the output it actually produced on PostgreSQL 16.14.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230066e8' stroke-width='2'%3E%3Cellipse cx='12' cy='5.5' rx='8' ry='3'/%3E%3Cpath d='M4 5.5v13c0 1.7 3.6 3 8 3s8-1.3 8-3v-13M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="assets/theme.css">
+<style>
+.refbar{
+  position:sticky; top:var(--topbar-h); z-index:40; background:var(--white);
+  border-bottom:1px solid var(--line); padding:12px 0;
+}
+.refbar-in{display:flex; gap:14px; align-items:center; flex-wrap:wrap}
+.search{
+  flex:1 1 320px; display:flex; align-items:center; gap:9px; height:38px; padding:0 13px;
+  background:var(--ground); border:1px solid var(--line); border-radius:var(--r);
+}
+.search:focus-within{border-color:var(--accent); background:var(--white)}
+.search svg{width:15px; height:15px; color:var(--ink-3); flex-shrink:0}
+.search input{flex:1; min-width:0; background:none; border:none; outline:none; font-size:14px}
+.search kbd{
+  font-family:var(--mono); font-size:10px; color:var(--ink-3);
+  border:1px solid var(--line); border-radius:3px; padding:1px 5px; background:var(--white);
+}
+.progress{display:flex; align-items:center; gap:10px; font-size:12.5px; color:var(--ink-2)}
+.progress .track{width:120px; height:6px; background:var(--line); border-radius:99px; overflow:hidden}
+.progress .track i{display:block; height:100%; background:var(--accent-solid); width:0; transition:width .25s ease}
+.progress b{font-family:var(--mono); font-weight:700; color:var(--ink)}
+#hits{font-size:12.5px; color:var(--ink-2); font-family:var(--mono)}
+
+.reflayout{display:grid; grid-template-columns:238px minmax(0,1fr); gap:34px; padding:30px 0 70px}
+#cats{position:sticky; top:calc(var(--topbar-h) + 74px); align-self:start; max-height:calc(100vh - var(--topbar-h) - 100px); overflow-y:auto}
+#cats a{
+  display:flex; align-items:center; gap:9px; text-decoration:none; color:var(--ink-2);
+  font-size:13.5px; padding:6px 10px; border-radius:var(--r); border-left:2px solid transparent;
+}
+#cats a:hover{background:var(--ground); color:var(--ink)}
+#cats a.on{background:var(--accent-wash); color:var(--accent-deep); font-weight:700; border-left-color:var(--accent)}
+#cats a.on .ct{color:var(--accent-deep)}   /* --ink-3 on the tint is 4.14:1 */
+#cats a .nm{flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+#cats a .ct{font-family:var(--mono); font-size:11px; color:var(--ink-3)}
+
+.part{margin-bottom:34px}
+.part-h{display:flex; align-items:center; gap:11px; padding:0 0 9px; border-bottom:1px solid var(--line); margin-bottom:4px}
+.part-h .pn{font-family:var(--mono); font-size:12px; color:var(--ink-3)}
+.part-h h2{font-size:17px; font-weight:600}
+.part-h .ct{margin-left:auto; font-family:var(--mono); font-size:12px; color:var(--ink-3)}
+
+.entry{
+  display:grid; grid-template-columns:minmax(0,290px) minmax(0,1fr) 34px; gap:16px;
+  align-items:start; padding:11px 10px; border-bottom:1px solid var(--line-soft);
+  cursor:pointer; border-radius:var(--r);
+}
+.entry:hover{background:var(--accent-wash)}
+.entry.kb{background:var(--accent-wash); box-shadow:inset 2px 0 0 var(--accent)}
+.entry.done .e-nm{color:var(--ink-3); text-decoration:line-through}
+.e-nm{font-family:var(--mono); font-size:14px; font-weight:700; color:var(--sql-fn)}
+.e-sg{font-family:var(--mono); font-size:11.5px; color:var(--ink-2); margin-top:2px; word-break:break-word}
+.e-ds{font-size:14px; color:var(--ink-2); padding-top:1px}
+.mk{
+  width:22px; height:22px; border:1px solid var(--line); border-radius:var(--r-sm);
+  color:transparent; background:var(--white); font-size:13px; line-height:1;
+  justify-self:end; flex-shrink:0;
+}
+.mk:hover{border-color:var(--accent); color:var(--accent-line)}
+.entry.done .mk{background:var(--accent-solid); border-color:var(--accent-solid); color:#fff}
+
+#nothing{padding:40px 0; text-align:center; color:var(--ink-2)}
+
+/* ---------------------------------------------------------------- drawer */
+#veil{position:fixed; inset:0; background:rgba(22,25,29,.32); opacity:0; pointer-events:none; transition:opacity .18s ease; z-index:70}
+#veil.on{opacity:1; pointer-events:auto}
+#peek{
+  position:fixed; top:0; right:0; bottom:0; width:min(620px,100%);
+  background:var(--white); border-left:1px solid var(--line); z-index:71;
+  transform:translateX(100%); transition:transform .2s ease;
+  display:flex; flex-direction:column; box-shadow:-12px 0 34px rgba(0,0,0,.1);
+}
+#peek.on{transform:none}
+.peek-bar{display:flex; align-items:center; gap:8px; padding:11px 16px; border-bottom:1px solid var(--line); background:var(--ground)}
+#peek-crumb{flex:1; font-size:13px; color:var(--ink-2); overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+#peek-crumb b{color:var(--ink)}
+.peek-bar button{
+  width:28px; height:28px; border:1px solid var(--line); border-radius:var(--r-sm);
+  background:var(--white); color:var(--ink-2); font-size:14px; line-height:1;
+}
+.peek-bar button:hover:not(:disabled){border-color:var(--accent); color:var(--accent-deep)}
+.peek-bar button:disabled{opacity:.35}
+#peek-body{flex:1; overflow-y:auto; padding:22px 24px 30px}
+.fn-name{font-family:var(--mono); font-size:22px; font-weight:700; color:var(--sql-fn)}
+.fn-sig{font-family:var(--mono); font-size:13px; color:var(--ink-2); margin-top:3px}
+.fn-note{margin:11px 0 20px; color:var(--ink-2); font-size:15px}
+#peek-body .lbl{margin-top:22px}
+#peek-body .lbl .btn{margin-left:auto}
+.given{display:flex; flex-direction:column; gap:12px}
+.given-h{font-family:var(--mono); font-size:11.5px; color:var(--ink-2); margin-bottom:5px}
+.done-row{display:flex; align-items:center; gap:14px; margin-top:26px; padding-top:18px; border-top:1px solid var(--line)}
+.done-btn.on, #done-btn.on{background:var(--good-wash); border-color:#a9d9c1; color:var(--good); font-weight:700}
+.hint{font-size:12px; color:var(--ink-3); font-family:var(--mono)}
+
+@media (max-width:900px){
+  .reflayout{grid-template-columns:1fr; gap:0}
+  #cats{
+    position:static; display:flex; gap:6px; overflow-x:auto; max-height:none;
+    padding-bottom:12px; margin-bottom:14px; border-bottom:1px solid var(--line);
+  }
+  #cats a{border-left:none; white-space:nowrap}
+  #cats a .ct{display:none}
+  .entry{grid-template-columns:minmax(0,1fr) 30px; gap:8px}
+  .e-ds{grid-column:1; font-size:13.5px}
+}
+</style>
+</head>
+<body class="app">
+
+<header data-shell></header>
+
+<div class="pagehead">
+  <div class="wrap pagehead-row">
+    <div>
+      <div class="eyebrow">Step 02 · Reference</div>
+      <h1>Function reference</h1>
+      <p>
+        459 built-in functions across 21 categories. Every result below was produced by
+        <b>running the query</b> against PostgreSQL 16.14 — nothing here is written from memory.
+        Keep this open while you work through the other steps.
+      </p>
+    </div>
+  </div>
+</div>
+
+<div class="refbar">
+  <div class="wrap refbar-in">
+    <label class="search">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <input id="q" type="text" placeholder="Search 459 functions" autocomplete="off" spellcheck="false" aria-label="Search functions">
+      <kbd>/</kbd>
+    </label>
+    <span id="hits" aria-live="polite"></span>
+    <div class="progress">
+      <span>Read <b id="meter-n">0 / 459</b></span>
+      <span class="track"><i id="meter-bar"></i></span>
+      <button class="btn btn-quiet btn-sm" id="clear-btn">clear</button>
+    </div>
+  </div>
+</div>
+
+<main class="wrap">
+  <div class="reflayout">
+    <nav id="cats" aria-label="Categories"></nav>
+    <div>
+      <div id="parts"></div>
+      <div id="nothing" hidden>Nothing matches that search.</div>
+      <div id="pager"></div>
+    </div>
+  </div>
+</main>
+
+<div id="veil"></div>
+<aside id="peek" aria-label="Function detail">
+  <div class="peek-bar">
+    <span id="peek-crumb"></span>
+    <button id="prev-btn" aria-label="Previous function">‹</button>
+    <button id="next-btn" aria-label="Next function">›</button>
+    <button id="shut-btn" aria-label="Close">×</button>
+  </div>
+  <div id="peek-body"></div>
+</aside>
+
+<footer data-shell></footer>
+
+<script src="assets/shell.js"></script>
+<script src="assets/sqlhl.js"></script>
+<script src="assets/reference-data.js"></script>
+<script>
+  Shell.mount("reference");
+  document.getElementById("pager").innerHTML = Shell.pager("reference");
+</script>
+<script src="assets/reference.js"></script>
+</body>
+</html>

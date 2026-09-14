@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Leaderboard — PostgreSQL Master</title>
+<meta name="description" content="Weekly and all-time standings, ranked on solves confirmed against real LeetCode and HackerRank profiles.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230066e8' stroke-width='2'%3E%3Cellipse cx='12' cy='5.5' rx='8' ry='3'/%3E%3Cpath d='M4 5.5v13c0 1.7 3.6 3 8 3s8-1.3 8-3v-13M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="assets/theme.css">
+<link rel="stylesheet" href="assets/roadmap.css">
+</head>
+<body>
+
+<header data-shell></header>
+<main class="wrap" id="main">
+  <section class="stack">
+    <p class="eyebrow" id="weeklabel">&nbsp;</p>
+    <h1 style="font-size:clamp(24px,4vw,34px)">Leaderboard</h1>
+    <p class="muted" style="max-width:62ch">Ranked by <b>verified</b> solves — the problems
+      confirmed against the student's own LeetCode and HackerRank profiles. Ticking a box does
+      not move you up the board; solving the problem does. Points are still shown, and break a
+      tie between students level on solves. The arrow compares this week's standing with where
+      that person stood at the end of last week.</p>
+  </section>
+
+  <div id="status"></div>
+
+  <div class="toolbar">
+    <div class="row" id="f-view" role="group" aria-label="Leaderboard range">
+      <button class="chipbtn" data-v="week" aria-pressed="true">This week</button>
+      <button class="chipbtn" data-v="all" aria-pressed="false">All time</button>
+    </div>
+    <button class="chipbtn" id="refresh">Refresh</button>
+    <span class="ch-meta" id="updated"></span>
+  </div>
+
+  <div class="podium" id="podium"></div>
+
+  <div class="card">
+    <div class="tablewrap">
+      <table class="lb">
+        <thead><tr>
+          <th style="width:1%">#</th><th style="width:1%">Move</th><th>Student</th>
+          <th id="verhead">Verified</th><th>Total points</th>
+          <th>Last solve</th>
+        </tr></thead>
+        <tbody id="rows"><tr><td colspan="6"><div class="empty">Loading…</div></td></tr></tbody>
+      </table>
+    </div>
+  </div>
+
+  <footer>
+    Ranks recompute from the class sheet each time this page loads.<br>
+    Students level on verified solves share a rank; points break the tie, then whoever got there first.
+    <p class="byline">&copy; <span data-year>2026</span> Educator Satyaki Das &middot;
+      All copyrights reserved</p>
+  </footer>
+</main>
+<footer data-shell></footer>
+
+<script src="assets/shell.js"></script>
+<script src="assets/config.js"></script>
+<script src="assets/roadmap-core.js"></script>
+<script src="assets/rm-leaderboard.js"></script>
+</body>
+</html>

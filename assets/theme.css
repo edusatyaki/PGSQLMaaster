@@ -1,0 +1,285 @@
+/* ===========================================================================
+   PostgreSQL Master — the single design system
+   ---------------------------------------------------------------------------
+   Every module on this site draws from this file. The five sources it was
+   merged from each carried their own skin (pgAdmin dark, VS Code dark, two
+   light variants); all of that is gone. One palette, one type scale, one SQL
+   token colouring, light only — there is no dark palette to fall out of sync.
+   Palette is the Newton School system already used across the batch's sites.
+   =========================================================================== */
+
+:root{
+  /* brand ---------------------------------------------------------------- */
+  --accent:#0673f9;        /* borders, focus ring, rules — never behind white text */
+  --accent-solid:#0066e8;  /* filled surfaces carrying white text (5.17:1) */
+  --accent-deep:#0052cc;   /* links, hover */
+  --accent-wash:#e8f1fe;   /* tinted backgrounds */
+  --accent-line:#b9d4fb;
+
+  /* ink ------------------------------------------------------------------ */
+  --ink:#16191d;
+  --ink-2:#5b6271;
+  --ink-3:#6b7484;   /* darkened from the source palette's #8c95a6: that value is
+                        3.02:1 on white and this token carries real text (step
+                        numbers, row counts, hints) on every page. Now 4.71:1. */
+
+  /* surfaces ------------------------------------------------------------- */
+  --white:#ffffff;
+  --ground:#f6f7f9;
+  --line:#e1e5ea;
+  --line-soft:#eceff3;
+
+  /* semantic ------------------------------------------------------------- */
+  --good:#0a6b43;   --good-wash:#e6f6ee;
+  --warn:#8a5a00;   --warn-wash:#fdf3e2;
+  --bad:#b3261e;    --bad-wash:#fdecea;
+  --note:#5b3bb3;   --note-wash:#f0ecfb;
+
+  /* SQL syntax — one palette for every module that prints SQL ------------ */
+  --sql-kw:#0033b3;
+  --sql-ctrl:#7b1fa2;
+  --sql-str:#a31515;
+  --sql-num:#0b7a4b;
+  --sql-com:#107c10;
+  --sql-fn:#795e26;
+  --sql-type:#20707f;
+  --sql-meta:#a04a20;
+  --sql-punct:#3c4350;
+
+  /* type ----------------------------------------------------------------- */
+  --sans:Arial,Helvetica,sans-serif;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,"Courier New",monospace;
+
+  /* form ----------------------------------------------------------------- */
+  --r-sm:4px; --r:6px; --r-lg:12px;
+  --shadow:0 5px 15px rgba(0,0,0,.06);
+  --shadow-lift:0 12px 28px rgba(6,115,249,.13);
+  --topbar-h:58px;
+}
+
+/* ------------------------------------------------------------------ reset */
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{
+  font-family:var(--sans); color:var(--ink); background:var(--white);
+  font-size:16px; line-height:1.6; -webkit-font-smoothing:antialiased;
+}
+a{color:var(--accent-deep)}
+button,input,select,textarea{font-family:inherit; font-size:inherit; color:inherit}
+button{cursor:pointer; background:none; border:none}
+:focus-visible{outline:3px solid var(--accent); outline-offset:2px; border-radius:var(--r-sm)}
+img{max-width:100%}
+[hidden]{display:none !important}
+
+.wrap{max-width:1180px; margin:0 auto; padding:0 24px}
+.wrap-narrow{max-width:900px; margin:0 auto; padding:0 24px}
+.sr{position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap}
+
+/* ----------------------------------------------------------------- topbar */
+.topbar{
+  position:sticky; top:0; z-index:60; height:var(--topbar-h);
+  background:var(--white); border-bottom:1px solid var(--line);
+  display:flex; align-items:center;
+}
+.topbar-in{
+  max-width:1180px; margin:0 auto; padding:0 24px; width:100%;
+  display:flex; align-items:center; gap:10px;
+}
+.brand{
+  display:flex; align-items:center; gap:9px; text-decoration:none; color:var(--ink);
+  font-weight:700; font-size:15px; letter-spacing:-.01em; flex-shrink:0; margin-right:8px;
+}
+.brand svg{width:20px; height:20px; color:var(--accent-solid); flex-shrink:0}
+.brand span{white-space:nowrap}
+.navscroll{
+  display:flex; align-items:center; gap:2px; overflow-x:auto; flex:1; min-width:0;
+  scrollbar-width:none; -ms-overflow-style:none;
+}
+.navscroll::-webkit-scrollbar{display:none}
+.navscroll a{
+  display:flex; align-items:center; gap:7px; white-space:nowrap; text-decoration:none;
+  font-size:13.5px; color:var(--ink-2); padding:7px 11px; border-radius:var(--r);
+}
+.navscroll a:hover{background:var(--ground); color:var(--ink)}
+.navscroll a.on{background:var(--accent-wash); color:var(--accent-deep); font-weight:700}
+.navscroll a .st{
+  font-family:var(--mono); font-size:11px; color:var(--ink-3);
+  border:1px solid var(--line); border-radius:3px; padding:0 4px; flex-shrink:0;
+}
+.navscroll a.on .st{border-color:var(--accent-line); color:var(--accent-deep)}
+
+/* ------------------------------------------------------------------ pages */
+.band{padding:66px 0}
+.band-grey{background:var(--ground); border-top:1px solid var(--line); border-bottom:1px solid var(--line)}
+.band-tight{padding:34px 0}
+
+.pagehead{
+  background:var(--ground); border-bottom:1px solid var(--line); padding:30px 0;
+}
+.pagehead .eyebrow{
+  font-size:11.5px; font-weight:700; letter-spacing:.13em; text-transform:uppercase;
+  color:var(--accent-deep); margin-bottom:7px;
+}
+.pagehead h1{font-size:31px; font-weight:600; letter-spacing:-.015em; line-height:1.2}
+.pagehead p{margin-top:9px; color:var(--ink-2); font-size:16px; max-width:76ch}
+.pagehead-row{display:flex; gap:24px; align-items:flex-end; flex-wrap:wrap; justify-content:space-between}
+
+.head{text-align:center; max-width:64ch; margin:0 auto 48px}
+.head h2{font-size:32px; font-weight:600; letter-spacing:-.015em; line-height:1.25}
+.head p{margin-top:13px; font-size:17px; color:var(--ink-2)}
+
+h1,h2,h3,h4{font-weight:600; letter-spacing:-.01em}
+
+/* ---------------------------------------------------------------- buttons */
+.btn{
+  display:inline-flex; align-items:center; justify-content:center; gap:8px;
+  background:var(--accent-solid); color:#fff; text-decoration:none;
+  font-size:14.5px; font-weight:700; padding:11px 20px; border-radius:var(--r);
+  transition:background .15s ease, transform .15s ease; border:1px solid transparent;
+}
+.btn:hover{background:var(--accent-deep); transform:translateY(-1px)}
+.btn:disabled{opacity:.42; pointer-events:none}
+.btn-quiet{background:var(--white); color:var(--ink); border-color:var(--line); font-weight:400}
+.btn-quiet:hover{background:var(--ground); border-color:var(--ink-3); transform:none; color:var(--ink)}
+.btn-sm{padding:7px 13px; font-size:13px}
+.btn-dark{background:transparent; color:#fff; border-color:#444b57; font-weight:400}
+.btn-dark:hover{background:#242932; border-color:#5d6675; transform:none}
+
+/* ------------------------------------------------------------------ cards */
+.card{
+  background:var(--white); border:1px solid var(--line); border-radius:var(--r-lg);
+  padding:26px 28px; box-shadow:var(--shadow);
+}
+.panel{
+  background:var(--white); border:1px solid var(--line); border-radius:var(--r-lg);
+  overflow:hidden;
+}
+.panel-hd{
+  padding:11px 16px; border-bottom:1px solid var(--line); background:var(--ground);
+  font-size:11.5px; font-weight:700; letter-spacing:.11em; text-transform:uppercase;
+  color:var(--ink-2); display:flex; align-items:center; gap:10px;
+}
+.panel-hd .fill{flex:1}
+.panel-bd{padding:16px}
+
+.tag{
+  display:inline-block; font-size:11px; font-weight:700; letter-spacing:.1em;
+  text-transform:uppercase; padding:4px 9px; border-radius:var(--r-sm);
+  background:var(--accent-wash); color:var(--accent-deep);
+}
+.tag-note{background:var(--note-wash); color:var(--note)}
+.tag-good{background:var(--good-wash); color:var(--good)}
+.tag-warn{background:var(--warn-wash); color:var(--warn)}
+.tag-bad{background:var(--bad-wash); color:var(--bad)}
+
+.chip{
+  font-family:var(--mono); font-size:12.5px; color:var(--ink-2);
+  background:var(--ground); border:1px solid var(--line);
+  border-radius:var(--r-sm); padding:5px 10px; display:inline-block;
+}
+.chips{display:flex; flex-wrap:wrap; gap:8px; list-style:none}
+
+.lbl{
+  font-size:11px; font-weight:700; letter-spacing:.12em; text-transform:uppercase;
+  color:var(--ink-3); display:flex; align-items:center; gap:10px; margin-bottom:8px;
+}
+.lbl::after{content:""; flex:1; height:1px; background:var(--line)}
+
+/* ------------------------------------------------------------------- code */
+code{
+  font-family:var(--mono); font-size:.87em; background:var(--ground);
+  border:1px solid var(--line); border-radius:var(--r-sm); padding:1px 5px; color:var(--ink);
+}
+pre.sql, .codeblock{
+  font-family:var(--mono); font-size:14px; line-height:1.62; color:var(--ink);
+  background:var(--ground); border:1px solid var(--line); border-left:3px solid var(--accent);
+  border-radius:var(--r); padding:14px 16px; overflow-x:auto; white-space:pre;
+  tab-size:2;
+}
+pre.sql code, .codeblock code{background:none; border:none; padding:0; font-size:inherit}
+
+/* the one SQL token palette */
+.k,.tok-kw    {color:var(--sql-kw);   font-weight:700}
+.cf,.tok-ctrl {color:var(--sql-ctrl); font-weight:700}
+.s,.tok-str   {color:var(--sql-str)}
+.nu,.tok-num  {color:var(--sql-num)}
+.c,.tok-com   {color:var(--sql-com);  font-style:italic}
+.f,.tok-fn    {color:var(--sql-fn)}
+.t,.tok-type  {color:var(--sql-type)}
+.tok-meta     {color:var(--sql-meta); font-weight:700}
+.tok-punct    {color:var(--sql-punct)}
+
+/* ------------------------------------------------------------------ grids */
+table.grid{border-collapse:collapse; width:100%; font-size:13.5px; font-family:var(--mono)}
+table.grid th{
+  text-align:left; font-weight:700; font-size:11.5px; letter-spacing:.04em;
+  text-transform:uppercase; color:var(--ink-2); background:var(--ground);
+  border-bottom:1px solid var(--line); padding:7px 11px; white-space:nowrap;
+}
+table.grid td{
+  border-bottom:1px solid var(--line-soft); padding:6px 11px; color:var(--ink);
+  vertical-align:top;
+}
+table.grid tr:last-child td{border-bottom:none}
+table.grid td.n, table.grid th.n{text-align:right; font-variant-numeric:tabular-nums}
+table.grid td.wrap{white-space:pre-wrap; word-break:break-word}
+table.grid .nil, table.grid .nullcell{color:var(--ink-3); font-style:italic}
+.grid-wrap{overflow-x:auto; border:1px solid var(--line); border-radius:var(--r)}
+.grid-wrap table.grid{border-radius:0}
+.rowcount{font-family:var(--mono); font-size:12px; color:var(--ink-3); padding:6px 11px}
+
+/* ------------------------------------------------------------------ notes */
+.note{
+  border:1px solid var(--line); border-left:3px solid var(--accent);
+  background:var(--accent-wash); border-radius:var(--r);
+  padding:11px 14px; font-size:14.5px; color:var(--ink-2);
+}
+.note b{color:var(--ink)}
+.note.warn{background:var(--warn-wash); border-left-color:#d08700}
+.note.bad{background:var(--bad-wash); border-left-color:var(--bad)}
+.note.good{background:var(--good-wash); border-left-color:var(--good)}
+
+.banner{
+  display:flex; gap:11px; align-items:flex-start; border-radius:var(--r);
+  padding:13px 16px; font-size:14.5px; border:1px solid var(--line);
+  background:var(--accent-wash); color:var(--ink-2); margin-bottom:18px;
+}
+.banner b{color:var(--ink)}
+.banner.warn{background:var(--warn-wash); border-color:#f0dcb4}
+.banner.bad{background:var(--bad-wash); border-color:#f5cfcb}
+
+/* module pager, emitted by Shell.pager() */
+.modpager{display:flex; flex-wrap:wrap; justify-content:space-between; gap:14px;
+          padding:26px 0 0; border-top:1px solid var(--line)}
+.modpager .btn{flex:1 1 auto; min-width:0}
+
+/* ----------------------------------------------------------------- footer */
+.sitefoot{background:var(--ink); color:#8a93a1; padding:40px 0; font-size:14px; margin-top:auto}
+.sitefoot-in{display:flex; flex-wrap:wrap; gap:16px; justify-content:space-between; align-items:center}
+.sitefoot b{color:#fff; font-weight:600}
+.sitefoot a{color:#8ebaff}
+
+/* full-height module pages sit in a flex column so the footer lands correctly */
+body.app{display:flex; flex-direction:column; min-height:100vh}
+body.app main{flex:1 0 auto}
+
+/* ------------------------------------------------------------------ phone */
+@media (max-width:860px){
+  .topbar-in{padding:0 14px}
+  .brand span{display:none}
+  .navscroll a .st{display:none}
+}
+@media (max-width:640px){
+  .band{padding:46px 0}
+  .head{margin-bottom:32px}
+  .head h2{font-size:25px}
+  .pagehead h1{font-size:24px}
+  .pagehead{padding:22px 0}
+  .wrap,.wrap-narrow{padding:0 16px}
+  .card{padding:20px}
+  pre.sql,.codeblock{font-size:12.5px}
+}
+
+@media (prefers-reduced-motion:reduce){
+  *{animation-duration:.01ms !important; transition-duration:.01ms !important}
+}

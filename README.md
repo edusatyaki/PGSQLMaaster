@@ -1,53 +1,93 @@
 # PostgreSQL Master
 
-The front door for the XShare SQL batch. Five teaching resources, sequenced as a single path
-rather than listed as a menu, so a student knows what to open first and what to open next.
+The XShare SQL course as **one site**. Five teaching resources that used to live in five separate
+repositories are merged here — their code, not links to them — sequenced as a single path and
+rebuilt on one design system.
 
 **Live:** https://edusatyaki.github.io/PGSQLMaaster/
 
 ## The path
 
-| # | Resource | Role | Link |
-| --- | --- | --- | --- |
-| 1 | **SQL Practice Workbook** | Foundations — 73 worked problems across DDL, DML, TCL and DCL, plus a chapter on functions. The query types itself out, then runs. | [site](https://edusatyaki.github.io/SQL-Practice-Workbook-1/) · [repo](https://github.com/edusatyaki/SQL-Practice-Workbook-1) |
-| 2 | **PG Master** | Reference — 459 built-in functions, every result captured by running the query against PostgreSQL 16.14. Opened alongside every other step, not read front to back. | [site](https://edusatyaki.github.io/PGMaster/) · [repo](https://github.com/edusatyaki/PGMaster) |
-| 3 | **Inner Query, Outer Query** | Subqueries — 35 steps, with the rows the inner query touches lighting up in the dataset panel as the trace advances. | [site](https://edusatyaki.github.io/Subquerry/) |
-| 4 | **Window Functions** | An interactive visualiser for the only question that matters: which rows can the current row see? Change the function, partition, ordering or frame and the answer recomputes. | [site](https://edusatyaki.github.io/Windows-functions-/) · [repo](https://github.com/edusatyaki/Windows-functions-) |
-| 5 | **SQL Roadmap** | Practice — 379 problems in teaching order, with progress tracking and a leaderboard ranked on solves verified against real LeetCode and HackerRank profiles. | [site](https://edusatyaki.github.io/SQLRoadmap/) · [repo](https://github.com/edusatyaki/SQLRoadmap) |
+| # | Page | What it is |
+| --- | --- | --- |
+| 01 | [`workbook.html`](workbook.html) | 73 worked problems across 17 units. The answer types itself into the editor, then runs, with the table structure diffed before and after. |
+| 02 | [`reference.html`](reference.html) | 459 built-in functions across 21 categories. Every printed result was captured by executing the query against PostgreSQL 16.14. |
+| 03 | [`subqueries.html`](subqueries.html) | 35 steps. As the trace advances, exactly the rows the inner query touches light up in the dataset panel. |
+| 04 | [`windows.html`](windows.html) | Interactive window-function visualiser. Change the function, partition, ordering or frame and the answer recomputes. |
+| 05 | [`roadmap.html`](roadmap.html) | 379 practice problems, progress tracking, and a leaderboard ranked on verified solves. With [`join.html`](join.html) and [`leaderboard.html`](leaderboard.html). |
 
-Step 2 is deliberately placed second and labelled as a reference: it is the dictionary, and
-steps 1, 3, 4 and 5 are the grammar.
+Step 02 is deliberately a reference rather than a lesson: it is the dictionary, the rest is the
+grammar.
 
 ## Publishing
 
 **Settings ▸ Pages ▸ Build and deployment ▸ Source ▸ GitHub Actions.** Pushing to `main` then
-publishes the site via `.github/workflows/static.yml`. It appears at the URL above a minute
-later.
+publishes via `.github/workflows/static.yml`. `.nojekyll` is present so the directory is served
+as-is.
 
-Alternatively set the source to *Deploy from a branch* (`main`, `/ (root)`) and delete the
-workflow — the site is plain static files either way. `.nojekyll` is present so GitHub serves
-the directory as-is.
+## Layout
 
-## Editing
+```
+index.html              the path
+workbook.html  reference.html  subqueries.html  windows.html
+roadmap.html   join.html       leaderboard.html
+assets/theme.css        THE design system — every page draws from it
+assets/shell.js         the shared top bar, footer and module pager
+assets/sqlhl.js         SQL highlighter (shared by the reference)
+assets/<module>.css/.js one pair per module
+assets/workbook-data.js 73 problems      assets/reference-data.js  459 functions
+data/roadmap.json       379 problems     assets/config.js          Apps Script endpoint
+```
 
-One self-contained `index.html`: styles and markup, no JavaScript, no build step, no external
-requests — no fonts, no CDN, nothing to go offline. Open it in a browser to preview.
+No build step, no framework, no external requests — no web fonts, no CDN. Open `index.html` in a
+browser.
 
-The palette matches SQL Roadmap and the window-function visualiser, so the family reads as one
-system:
+## What the merge changed
 
-| Token | Value | Used for |
-| --- | --- | --- |
-| `--accent` | `#0673f9` | buttons, active step markers |
-| `--accent-deep` | `#0052cc` | links |
-| `--ink` | `#16191d` | body text, hero and footer ground |
-| `--ink-2` | `#5b6271` | secondary text |
-| `--ground` | `#f6f7f9` | alternating band background |
-| `--line` | `#e1e5ea` | borders |
+The five sources were written independently and looked it: two dark skins imitating other
+applications, two light palettes, three different sets of SQL syntax colours. What changed, and
+what deliberately did not:
 
-Type is Arial and the site is light-only, matching the rest of the batch's sites. Every stat on
-the page is a real figure from the resource it describes — if a resource grows, update the
-number in both `index.html` and the table above.
+**Unified.** One palette and one type scale in `assets/theme.css`. One SQL token colouring, so a
+keyword is the same blue in the workbook, the reference, the subquery trace and the visualiser.
+One top bar, footer and next/previous pager from `assets/shell.js`.
+
+**Removed.** The pgAdmin window chrome from the workbook (title bar, icon rail, object-explorer
+tree) and the VS Code chrome from the reference (activity bar, editor tabs, status bar). Both
+were skins imitating other software rather than part of the teaching. The workbook's light/dark
+toggle went too — the site is single-theme, so there is no second palette to keep in sync. The
+roadmap shipped its own copy of this design system; that file is gone and it now uses the shared
+one.
+
+**Kept exactly.** Every problem, function, example and captured output. The workbook presenter,
+the subquery trace engine, the window-function model and the roadmap's client logic are the code
+they always were — the reference catalog is still generated by `PGMaster/build/build.py` and was
+copied across untouched.
+
+**Adapted.** Steps 03 and 04 were full-viewport slides; they are now bounded panels that still
+go fullscreen (`F`) for projecting. Module 03's CSS is scoped under `.sqmod` because it and the
+shared theme both use generic class names — that let its markup and JavaScript stay untouched.
+
+### Two colour values differ from the source palette
+
+Both were failing WCAG AA contrast and both carry real text:
+
+| Token | Source | Here | Why |
+| --- | --- | --- | --- |
+| filled accent | `#0673f9` | `#0066e8` | White 15px bold on `#0673f9` is 4.35:1. 15px bold is not "large text", so it needs 4.5:1. Now 5.17:1. The brand `#0673f9` is still used for borders, rules and the focus ring. |
+| `--ink-3` | `#8c95a6` | `#6b7484` | 3.02:1 on white, and this token carries step numbers, row counts and hints on every page. Now 4.71:1. |
+
+All eight pages were checked: every text node meets AA for its size and weight, and none
+overflows horizontally at 376px.
+
+## The roadmap backend
+
+Step 05 still talks to the same Google Apps Script web app and the same sheet — `assets/config.js`
+is unchanged. **That means this site and the original SQL Roadmap site are two front doors onto
+one sheet.** Retire the old one, or point students at only one of them.
+
+Backend source, setup and the verification design stay in the
+[SQLRoadmap](https://github.com/edusatyaki/SQLRoadmap) repository.
 
 ---
 

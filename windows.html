@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Window functions — PostgreSQL Master</title>
+<meta name="description" content="An interactive visualiser for the only question that matters about window functions: which rows can the current row actually see?">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230066e8' stroke-width='2'%3E%3Cellipse cx='12' cy='5.5' rx='8' ry='3'/%3E%3Cpath d='M4 5.5v13c0 1.7 3.6 3 8 3s8-1.3 8-3v-13M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="assets/theme.css">
+<link rel="stylesheet" href="assets/windows.css">
+<style>
+  /* the slide sits inside the site shell rather than owning the viewport */
+  .slidehost{padding:26px 0 44px; background:var(--ground)}
+  </style>
+</head>
+<body class="app">
+
+<header data-shell></header>
+
+<div class="pagehead">
+  <div class="wrap pagehead-row">
+    <div>
+      <div class="eyebrow">Step 04 · Concept</div>
+      <h1>Window functions</h1>
+      <p>
+        Most confusion about window functions is really confusion about one question:
+        <b>which rows can the current row see?</b> Change the function, the partition, the
+        ordering or the frame below and the window — and the answer — recompute live.
+      </p>
+    </div>
+  </div>
+</div>
+
+<main>
+<div class="slidehost">
+  <div class="wrap">
+
+<div class="stage" id="stage">
+<div class="slide" id="slide">
+
+  <div class="hdr">
+    <div class="ttl"><span class="c">WINDOW</span> Functions</div>
+    <div class="stepper" id="stepper"></div>
+    <div class="btns">
+      <button class="btn btn-ghost" id="btn-prev">&lsaquo;</button>
+      <button class="btn btn-blue" id="btn-next">Next &rsaquo;</button>
+      <button class="btn btn-green" id="btn-play">&#9654; Play</button>
+      <button class="btn btn-ghost" id="btn-reset">&#8634;</button>
+      <button class="btn btn-ghost" id="btn-full" title="Fullscreen (F)">&#9974;</button>
+    </div>
+  </div>
+
+  <div class="narrate">
+    <span class="badge" id="nar-badge">ROWS</span>
+    <p id="nar-text"></p>
+  </div>
+
+  <div class="grid">
+
+    <div class="card">
+      <div class="hd"><h3>Query</h3></div>
+      <div class="bd">
+        <div class="field">
+          <label class="lb" for="c-fn">Function</label>
+          <select id="c-fn">
+            <optgroup label="Aggregate — uses the frame">
+              <option value="SUM">SUM(amount)</option>
+              <option value="AVG">AVG(amount)</option>
+              <option value="COUNT">COUNT(*)</option>
+              <option value="MAX">MAX(amount)</option>
+              <option value="MIN">MIN(amount)</option>
+            </optgroup>
+            <optgroup label="Ranking — ignores the frame">
+              <option value="ROW_NUMBER">ROW_NUMBER()</option>
+              <option value="RANK">RANK()</option>
+              <option value="DENSE_RANK">DENSE_RANK()</option>
+            </optgroup>
+            <optgroup label="Offset — ignores the frame">
+              <option value="LAG">LAG(amount)</option>
+              <option value="LEAD">LEAD(amount)</option>
+            </optgroup>
+            <optgroup label="Value — uses the frame">
+              <option value="FIRST_VALUE">FIRST_VALUE(amount)</option>
+              <option value="LAST_VALUE">LAST_VALUE(amount)</option>
+            </optgroup>
+          </select>
+        </div>
+        <div class="field">
+          <label class="lb" for="c-part">PARTITION BY</label>
+          <select id="c-part">
+            <option value="none">(no PARTITION BY)</option>
+            <option value="city">city</option>
+            <option value="customer_id">customer_id</option>
+          </select>
+        </div>
+        <div class="field">
+          <label class="lb" for="c-order">ORDER BY &mdash; inside the window</label>
+          <div class="row2">
+            <select id="c-order">
+              <option value="order_date">order_date</option>
+              <option value="order_amount">order_amount</option>
+              <option value="order_id">order_id</option>
+            </select>
+            <select id="c-dir" aria-label="sort direction">
+              <option value="ASC">ASC</option>
+              <option value="DESC">DESC</option>
+            </select>
+          </div>
+        </div>
+        <div class="field">
+          <label class="lb" for="c-frame">Frame &mdash; rows this row can see</label>
+          <select id="c-frame">
+            <option value="running">UNBOUNDED PRECEDING &rarr; CURRENT ROW</option>
+            <option value="whole">UNBOUNDED PRECEDING &rarr; UNBOUNDED FOLLOWING</option>
+            <option value="moving">N PRECEDING &rarr; CURRENT ROW</option>
+            <option value="current">CURRENT ROW only</option>
+          </select>
+          <input type="range" id="c-n" min="1" max="4" step="1" value="2" aria-label="frame size N" />
+          <span class="hint" id="frame-hint"></span>
+        </div>
+        <div class="field">
+          <label class="lb">Current row &mdash; click any row in the table</label>
+          <div class="rowpick">
+            <button class="mini" id="btn-rowup">&uarr;</button>
+            <span class="cur" id="cur-label"></span>
+            <button class="mini" id="btn-rowdn">&darr;</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="hd"><h3>SQL</h3><span class="pill" id="sql-hint"></span></div>
+      <div class="bd" style="display:flex;flex-direction:column;gap:0">
+        <pre class="sql" id="sql"></pre>
+        <div class="sqlnote" id="sqlnote"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="hd"><h3>Rows &middot; snitch_sales</h3><span class="pill" id="rows-pill"></span></div>
+      <div class="bd" style="padding:0"><table id="rows-tbl"></table></div>
+    </div>
+
+    <div class="card">
+      <div class="hd"><h3>Result</h3><span class="pill" id="result-pill"></span></div>
+      <div class="bd" style="padding:0" id="result"></div>
+    </div>
+
+  </div>
+
+  <div class="card windowrow">
+    <div class="hd"><h3>The window for the current row</h3><span class="pill" id="win-pill"></span></div>
+    <div class="bd" id="winstrip"></div>
+  </div>
+
+</div>
+</div>  </div>
+</div>
+<div class="wrap"><div id="pager"></div></div>
+</main>
+
+<footer data-shell></footer>
+
+<script src="assets/shell.js"></script>
+<script>
+  Shell.mount("windows");
+  document.getElementById("pager").innerHTML = Shell.pager("windows");
+</script>
+<script src="assets/windows.js"></script>
+</body>
+</html>

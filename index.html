@@ -3,81 +3,29 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>PostgreSQL Master — the XShare SQL path</title>
-<meta name="description" content="Five resources in teaching order: write your first statements, look up any function, take subqueries apart, see what a window function sees, then practise across 379 tracked problems.">
-<meta property="og:title" content="PostgreSQL Master — the XShare SQL path">
-<meta property="og:description" content="Five resources in teaching order, from CREATE TABLE to window functions to 379 tracked practice problems.">
+<title>PostgreSQL Master — the XShare SQL course</title>
+<meta name="description" content="One site, five steps: write your first statements, look up any function, take subqueries apart, see what a window function sees, then practise across 379 tracked problems.">
+<meta property="og:title" content="PostgreSQL Master — the XShare SQL course">
+<meta property="og:description" content="From CREATE TABLE to window functions to 379 tracked practice problems — one site, in teaching order.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://edusatyaki.github.io/PGSQLMaaster/">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230673f9' stroke-width='2'%3E%3Cellipse cx='12' cy='5.5' rx='8' ry='3'/%3E%3Cpath d='M4 5.5v13c0 1.7 3.6 3 8 3s8-1.3 8-3v-13M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3'/%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230066e8' stroke-width='2'%3E%3Cellipse cx='12' cy='5.5' rx='8' ry='3'/%3E%3Cpath d='M4 5.5v13c0 1.7 3.6 3 8 3s8-1.3 8-3v-13M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="assets/theme.css">
 <style>
-:root{
-  --accent:#0673f9;        /* borders, focus ring — never behind white text */
-  --accent-solid:#0066e8;  /* filled surfaces carrying white text: 5.17:1 */
-  --accent-deep:#0052cc;   /* links, hover */
-  --ink:#16191d;
-  --ink-2:#5b6271;
-  --ink-3:#8c95a6;
-  --ground:#f6f7f9;
-  --line:#e1e5ea;
-  --white:#ffffff;
-  --shadow:0 5px 15px rgba(0,0,0,.06);
-  --shadow-lift:0 12px 28px rgba(6,115,249,.13);
-  --sans:Arial,Helvetica,sans-serif;
-  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,"Courier New",monospace;
-}
-*{box-sizing:border-box;margin:0;padding:0}
-html{-webkit-text-size-adjust:100%}
-body{
-  font-family:var(--sans); color:var(--ink); background:var(--white);
-  font-size:16px; line-height:1.6; -webkit-font-smoothing:antialiased;
-}
-a{color:var(--accent-deep)}
-:focus-visible{outline:3px solid var(--accent); outline-offset:3px; border-radius:4px}
-
-.wrap{max-width:1060px; margin:0 auto; padding:0 24px}
-
-/* ---------------------------------------------------------------- hero */
-.hero{background:var(--ink); color:#fff; padding:76px 0 84px}
-.eyebrow{
-  font-size:12px; font-weight:700; letter-spacing:.14em; text-transform:uppercase;
-  color:#9fb6d8; margin-bottom:18px;
-}
-.hero h1{font-size:50px; line-height:1.12; font-weight:600; letter-spacing:-.02em; max-width:15ch}
+.hero{background:var(--ink); color:#fff; padding:72px 0 78px}
+.hero .eyebrow{font-size:12px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:#9fb6d8; margin-bottom:17px}
+.hero h1{font-size:48px; line-height:1.13; font-weight:600; letter-spacing:-.022em; max-width:16ch}
 .hero h1 span{color:#6aa8ff}
-.hero p{margin-top:20px; font-size:19px; color:#c6ccd6; max-width:60ch}
-.hero-cta{display:flex; flex-wrap:wrap; gap:14px; margin-top:34px; align-items:center}
-.btn{
-  display:inline-block; background:var(--accent-solid); color:#fff; text-decoration:none;
-  font-size:15px; font-weight:700; padding:13px 24px; border-radius:6px;
-  transition:background .15s ease, transform .15s ease;
-}
-.btn:hover{background:var(--accent-deep); transform:translateY(-1px)}
-.btn-ghost{
-  background:transparent; color:#fff; border:1px solid #444b57; font-weight:400;
-}
-.btn-ghost:hover{background:#242932; border-color:#5d6675; transform:none}
-.hero-meta{
-  margin-top:42px; padding-top:26px; border-top:1px solid #2a2f38;
-  display:flex; flex-wrap:wrap; gap:36px;
-}
+.hero p{margin-top:19px; font-size:18.5px; color:#c6ccd6; max-width:62ch}
+.hero code{background:#242932; border-color:#39404b; color:#cfe0ff}
+.hero-cta{display:flex; flex-wrap:wrap; gap:13px; margin-top:32px}
+.hero-meta{margin-top:40px; padding-top:25px; border-top:1px solid #2a2f38; display:flex; flex-wrap:wrap; gap:36px}
 .hero-meta div{font-size:13px; color:#98a0ad}
 .hero-meta b{display:block; font-size:25px; color:#fff; font-weight:600; line-height:1.3}
 
-/* ------------------------------------------------------------ sections */
-.band{padding:74px 0}
-.band-grey{background:var(--ground); border-top:1px solid var(--line); border-bottom:1px solid var(--line)}
-.head{text-align:center; max-width:64ch; margin:0 auto 52px}
-.head h2{font-size:34px; font-weight:600; letter-spacing:-.015em; line-height:1.25}
-.head p{margin-top:14px; font-size:17px; color:var(--ink-2)}
-
-/* ---------------------------------------------------------------- path */
-.path{position:relative; max-width:830px; margin:0 auto; list-style:none}
-.path::before{
-  content:""; position:absolute; left:23px; top:18px; bottom:18px;
-  width:2px; background:var(--line);
-}
-.step{position:relative; padding-left:76px; padding-bottom:26px}
+.path{position:relative; max-width:840px; margin:0 auto; list-style:none}
+.path::before{content:""; position:absolute; left:23px; top:18px; bottom:18px; width:2px; background:var(--line)}
+.step{position:relative; padding-left:76px; padding-bottom:24px}
 .step:last-child{padding-bottom:0}
 .num{
   position:absolute; left:0; top:0; width:48px; height:48px; border-radius:50%;
@@ -86,104 +34,60 @@ a{color:var(--accent-deep)}
   display:flex; align-items:center; justify-content:center; z-index:1;
 }
 .step.is-core .num{background:var(--accent-solid); border-color:var(--accent-solid); color:#fff}
-
-.card{
-  background:var(--white); border:1px solid var(--line); border-radius:12px;
-  padding:28px 30px; box-shadow:var(--shadow);
-  transition:box-shadow .18s ease, border-color .18s ease, transform .18s ease;
-}
-.card:hover{box-shadow:var(--shadow-lift); border-color:#b9d4fb; transform:translateY(-2px)}
-.tag{
-  display:inline-block; font-size:11px; font-weight:700; letter-spacing:.1em;
-  text-transform:uppercase; padding:4px 9px; border-radius:4px; margin-bottom:12px;
-  background:#e8f1fe; color:var(--accent-deep);
-}
-.tag-ref{background:#f0ecfb; color:#5b3bb3}
-.tag-last{background:#e6f6ee; color:#0a6b43}
-.card h3{font-size:24px; font-weight:600; letter-spacing:-.01em; line-height:1.3}
-.card .lede{margin-top:4px; font-size:17px; color:var(--ink-2); font-weight:400}
-.card p.body{margin-top:14px; color:var(--ink-2); font-size:15.5px}
-.card p.body b{color:var(--ink); font-weight:700}
-.card code{
-  font-family:var(--mono); font-size:13.5px; background:var(--ground);
-  border:1px solid var(--line); border-radius:4px; padding:1px 5px; color:var(--ink);
-}
-.facts{
-  display:flex; flex-wrap:wrap; gap:8px; margin-top:18px; list-style:none;
-}
-.facts li{
-  font-family:var(--mono); font-size:12.5px; color:var(--ink-2);
-  background:var(--ground); border:1px solid var(--line);
-  border-radius:4px; padding:5px 10px;
-}
-.go{
-  display:inline-flex; align-items:center; gap:8px; margin-top:22px;
-  font-size:15px; font-weight:700; color:var(--accent-deep); text-decoration:none;
-}
-.go:hover{color:var(--accent); text-decoration:underline}
+.step .card{transition:box-shadow .18s ease, border-color .18s ease, transform .18s ease}
+.step .card:hover{box-shadow:var(--shadow-lift); border-color:var(--accent-line); transform:translateY(-2px)}
+.card h3{font-size:23px; margin-top:2px}
+.card .lede{margin-top:3px; font-size:16.5px; color:var(--ink-2)}
+.card p.body{margin-top:13px; color:var(--ink-2); font-size:15.5px}
+.card p.body b{color:var(--ink)}
+.go{display:inline-flex; align-items:center; gap:8px; margin-top:20px; font-size:15px; font-weight:700; color:var(--accent-deep); text-decoration:none}
+.go:hover{text-decoration:underline}
 .go .arw{transition:transform .15s ease}
 .card:hover .go .arw{transform:translateX(3px)}
 
-/* --------------------------------------------------------------- notes */
-.notes{display:grid; grid-template-columns:repeat(3,1fr); gap:24px; max-width:960px; margin:0 auto}
-.note{background:var(--white); border:1px solid var(--line); border-radius:12px; padding:24px 26px}
-.note h4{font-size:17px; font-weight:600; margin-bottom:8px}
-.note p{font-size:14.5px; color:var(--ink-2)}
+.notes{display:grid; grid-template-columns:repeat(3,1fr); gap:22px; max-width:980px; margin:0 auto}
+.notes .card{padding:22px 24px}
+.notes h4{font-size:17px; margin-bottom:7px}
+.notes p{font-size:14.5px; color:var(--ink-2)}
 
-/* -------------------------------------------------------------- footer */
-footer{background:var(--ink); color:#8a93a1; padding:44px 0; font-size:14px}
-.foot-in{display:flex; flex-wrap:wrap; gap:16px; justify-content:space-between; align-items:center}
-footer b{color:#fff; font-weight:600}
-footer a{color:#8ebaff}
-
-/* --------------------------------------------------------------- phone */
-@media (max-width:860px){
-  .notes{grid-template-columns:1fr}
-}
+@media (max-width:860px){ .notes{grid-template-columns:1fr} }
 @media (max-width:640px){
-  .hero{padding:52px 0 58px}
-  .hero h1{font-size:33px}
-  .hero p{font-size:17px}
-  .hero-meta{gap:24px}
+  .hero{padding:48px 0 54px}
+  .hero h1{font-size:32px}
+  .hero p{font-size:16.5px}
+  .hero-meta{gap:22px}
   .hero-meta b{font-size:21px}
-  .band{padding:52px 0}
-  .head{margin-bottom:36px}
-  .head h2{font-size:26px}
   .path::before{left:15px}
   .step{padding-left:50px}
   .num{width:32px; height:32px; font-size:12.5px}
-  .card{padding:22px 20px}
-  .card h3{font-size:20px}
-  .card .lede{font-size:15.5px}
-  .btn{display:block; text-align:center}
-  .hero-cta{display:block}
-  .hero-cta .btn{margin-bottom:12px}
+  .hero-cta .btn{width:100%}
 }
 </style>
 </head>
-<body>
+<body class="app">
 
-<header class="hero">
+<header data-shell></header>
+
+<div class="hero">
   <div class="wrap">
     <div class="eyebrow">XShare · PostgreSQL</div>
     <h1>Learn SQL in the order it <span>actually makes sense</span></h1>
     <p>
-      Five resources, built for this batch and sequenced as a single path — from your first
-      <code style="font-family:var(--mono);font-size:.85em">CREATE TABLE</code> through to window
+      One site, five steps — from your first <code>CREATE TABLE</code> through to window
       functions, then 379 practice problems that check themselves against your real profiles.
     </p>
     <div class="hero-cta">
-      <a class="btn" href="https://edusatyaki.github.io/SQL-Practice-Workbook-1/">Start at step 1 ▸</a>
-      <a class="btn btn-ghost" href="#path">See the whole path</a>
+      <a class="btn" href="workbook.html">Start at step 1 ▸</a>
+      <a class="btn btn-dark" href="#path">See the whole path</a>
     </div>
     <div class="hero-meta">
-      <div><b>5</b>resources</div>
+      <div><b>5</b>steps</div>
       <div><b>73</b>worked problems</div>
       <div><b>459</b>function examples</div>
       <div><b>379</b>practice problems</div>
     </div>
   </div>
-</header>
+</div>
 
 <main>
 <section class="band" id="path">
@@ -192,7 +96,7 @@ footer a{color:#8ebaff}
       <h2>The path</h2>
       <p>
         Work through it top to bottom. Step 2 is a reference rather than a lesson — open it once
-        and leave it open, because every step after this one will send you back to it.
+        and leave it open, because every step after it will send you back there.
       </p>
     </div>
 
@@ -202,45 +106,35 @@ footer a{color:#8ebaff}
         <div class="num">01</div>
         <article class="card">
           <span class="tag">Start here</span>
-          <h3>SQL Practice Workbook</h3>
+          <h3>Practice workbook</h3>
           <div class="lede">Write your first statements, and watch them run.</div>
           <p class="body">
-            A live presenter skinned as pgAdmin 4. For each problem you read the question, the
-            answer <b>types itself out</b> in the editor, and then you run it and see the exact
-            result. Covers the whole foundation: <code>CREATE</code>, the full <code>ALTER</code>
-            set, <code>TRUNCATE</code>/<code>DROP</code>, <code>INSERT</code> with upserts,
-            <code>SELECT</code>, <code>UPDATE</code>, <code>DELETE</code>, transactions, and
-            <code>GRANT</code>/<code>REVOKE</code> — then a second chapter on the functions you
-            reach for daily.
+            73 worked problems across 17 units. Read the question, the answer <b>types itself
+            out</b> in the editor, then you run it and see the exact result — with the table's
+            structure diffed before and after beside it. Covers <code>CREATE</code>, the full
+            <code>ALTER</code> set, <code>TRUNCATE</code>/<code>DROP</code>, <code>INSERT</code>
+            with upserts, <code>SELECT</code>, <code>UPDATE</code>, <code>DELETE</code>,
+            transactions and <code>GRANT</code>/<code>REVOKE</code>, then a chapter on functions.
           </p>
-          <ul class="facts">
-            <li>73 problems</li><li>17 units</li><li>DDL · DML · TCL · DCL</li><li>live schema diff</li>
-          </ul>
-          <a class="go" href="https://edusatyaki.github.io/SQL-Practice-Workbook-1/">
-            Open the workbook <span class="arw">→</span>
-          </a>
+          <ul class="chips"><li class="chip">73 problems</li><li class="chip">17 units</li><li class="chip">DDL · DML · TCL · DCL</li></ul>
+          <a class="go" href="workbook.html">Open the workbook <span class="arw">→</span></a>
         </article>
       </li>
 
       <li class="step">
         <div class="num">02</div>
         <article class="card">
-          <span class="tag tag-ref">Reference · keep it open</span>
-          <h3>PG Master</h3>
+          <span class="tag tag-note">Reference · keep it open</span>
+          <h3>Function reference</h3>
           <div class="lede">Look up any function and see what it really returns.</div>
           <p class="body">
-            Every built-in function worth knowing, with a runnable example and the output it
-            actually produces — <b>every result on that page was captured by running the query
+            459 built-in functions across 21 categories, each with a runnable example and the
+            output it actually produces — <b>every result was captured by running the query
             against PostgreSQL 16.14</b>, not written from memory. Search by name, signature or
-            description; click any entry for the query, the sample data it runs against, and the
-            real result. Mark entries as read as you go.
+            description, and mark entries off as you read them.
           </p>
-          <ul class="facts">
-            <li>459 functions</li><li>21 categories</li><li>executed output</li><li>instant search</li>
-          </ul>
-          <a class="go" href="https://edusatyaki.github.io/PGMaster/">
-            Open the reference <span class="arw">→</span>
-          </a>
+          <ul class="chips"><li class="chip">459 functions</li><li class="chip">21 categories</li><li class="chip">executed output</li></ul>
+          <a class="go" href="reference.html">Open the reference <span class="arw">→</span></a>
         </article>
       </li>
 
@@ -248,20 +142,16 @@ footer a{color:#8ebaff}
         <div class="num">03</div>
         <article class="card">
           <span class="tag">Concept</span>
-          <h3>Inner Query, Outer Query</h3>
+          <h3>Inner query, outer query</h3>
           <div class="lede">Subqueries, taken apart one row at a time.</div>
           <p class="body">
-            The dataset sits on the left the whole time. As the trace steps forward, <b>exactly the
-            rows the inner query touches light up</b> — so you can see a correlated subquery
-            re-running once per outer row instead of being told that it does. Thirty-five steps
-            across <code>EXISTS</code>, <code>IN</code>, scalar subqueries and correlated ones.
+            The dataset stays on the left the whole way through. As the trace steps forward,
+            <b>exactly the rows the inner query touches light up</b> — so you watch a correlated
+            subquery re-run once per outer row instead of being told that it does. Thirty-five
+            steps across <code>EXISTS</code>, <code>IN</code>, scalar and correlated subqueries.
           </p>
-          <ul class="facts">
-            <li>35 steps</li><li>EXISTS · IN · correlated</li><li>row-by-row trace</li>
-          </ul>
-          <a class="go" href="https://edusatyaki.github.io/Subquerry/">
-            Open the walkthrough <span class="arw">→</span>
-          </a>
+          <ul class="chips"><li class="chip">35 steps</li><li class="chip">EXISTS · IN · correlated</li><li class="chip">row-by-row trace</li></ul>
+          <a class="go" href="subqueries.html">Open the walkthrough <span class="arw">→</span></a>
         </article>
       </li>
 
@@ -269,42 +159,34 @@ footer a{color:#8ebaff}
         <div class="num">04</div>
         <article class="card">
           <span class="tag">Concept</span>
-          <h3>Window Functions</h3>
+          <h3>Window functions</h3>
           <div class="lede">Which rows can this row actually see?</div>
           <p class="body">
-            Most confusion about window functions is confusion about that one question. This one
-            stands on a single row and shows you its window — the partition, the ordering, and the
+            Most confusion about window functions is confusion about that one question. This step
+            stands on a single row and shows you its window — the partition, the ordering, the
             frame it can reach. <b>Change the function, the <code>PARTITION BY</code>, the
             <code>ORDER BY</code> or the frame and the answer recomputes live</b>, with the
             arithmetic spelled out underneath.
           </p>
-          <ul class="facts">
-            <li>12 functions</li><li>6 steps</li><li>live controls</li><li>built for projection</li>
-          </ul>
-          <a class="go" href="https://edusatyaki.github.io/Windows-functions-/">
-            Open the visualiser <span class="arw">→</span>
-          </a>
+          <ul class="chips"><li class="chip">12 functions</li><li class="chip">6 steps</li><li class="chip">live controls</li></ul>
+          <a class="go" href="windows.html">Open the visualiser <span class="arw">→</span></a>
         </article>
       </li>
 
       <li class="step">
         <div class="num">05</div>
         <article class="card">
-          <span class="tag tag-last">Practice</span>
-          <h3>SQL Roadmap</h3>
+          <span class="tag tag-good">Practice</span>
+          <h3>The roadmap</h3>
           <div class="lede">Now do it 379 times.</div>
           <p class="body">
             The practice set, ordered as a teaching sequence rather than by problem number. Tick
-            problems off as you solve them and your progress is saved for the batch — and the
-            leaderboard <b>ranks on solves confirmed against your real LeetCode and HackerRank
-            profiles</b>, so a ticked box earns points on the page but no position on the board.
+            problems off as you solve them, and the leaderboard <b>ranks on solves confirmed
+            against your real LeetCode and HackerRank profiles</b> — so a ticked box earns points
+            on the page but no position on the board.
           </p>
-          <ul class="facts">
-            <li>379 problems</li><li>14 chapters</li><li>323 LeetCode · 56 HackerRank</li><li>verified board</li>
-          </ul>
-          <a class="go" href="https://edusatyaki.github.io/SQLRoadmap/">
-            Open the roadmap <span class="arw">→</span>
-          </a>
+          <ul class="chips"><li class="chip">379 problems</li><li class="chip">14 chapters</li><li class="chip">323 LeetCode · 56 HackerRank</li></ul>
+          <a class="go" href="roadmap.html">Open the roadmap <span class="arw">→</span></a>
         </article>
       </li>
 
@@ -319,22 +201,22 @@ footer a{color:#8ebaff}
       <p>The path works on your own, but it was built to be taught from.</p>
     </div>
     <div class="notes">
-      <div class="note">
+      <div class="card">
         <h4>Steps 1, 3 and 4 project</h4>
         <p>
-          All three are keyboard-driven and have a fullscreen toggle — arrow keys or space to
-          advance, <code>F</code> for fullscreen on the later two. Type is sized to stay readable
-          from the back of a hall.
+          All three are keyboard-driven and go fullscreen — arrow keys or space to advance,
+          <code>F</code> for fullscreen on steps 3 and 4. Type is sized to stay readable from the
+          back of a hall.
         </p>
       </div>
-      <div class="note">
+      <div class="card">
         <h4>Step 2 is not a lesson</h4>
         <p>
-          Don't read PG Master front to back. Open it in a second tab at step 1 and search it
-          whenever a function comes up — it is a dictionary, and the path is the grammar.
+          Don't read the reference front to back. Open it in a second tab at step 1 and search it
+          whenever a function comes up — it is the dictionary, and the path is the grammar.
         </p>
       </div>
-      <div class="note">
+      <div class="card">
         <h4>Nothing here needs installing</h4>
         <p>
           Every page is static and opens in a browser. You only need your own PostgreSQL once you
@@ -346,12 +228,9 @@ footer a{color:#8ebaff}
 </section>
 </main>
 
-<footer>
-  <div class="wrap foot-in">
-    <div>Ideation &amp; development <b>Satyaki Das</b> · XShare</div>
-    <div><a href="https://github.com/edusatyaki">github.com/edusatyaki</a></div>
-  </div>
-</footer>
+<footer data-shell></footer>
 
+<script src="assets/shell.js"></script>
+<script>Shell.mount("");</script>
 </body>
 </html>
