@@ -38,7 +38,12 @@
       id: "DAG3VLLbcDc/eETtcBwGDKcpxxgLDK7IkA" }
   ];
 
-  root.NOTES.forEach(function (n) { n.url = CANVA + n.id + "/view"; });
+  /* `view` opens the deck in Canva; `embed` is the form the decks render in
+     inside the notes screen — ?embed drops Canva's own chrome. */
+  root.NOTES.forEach(function (n) {
+    n.url   = CANVA + n.id + "/view";
+    n.embed = CANVA + n.id + "/view?embed&hide_controls=1";
+  });
 
   /** The decks attached to one step, in list order. */
   root.notesFor = function (step) {

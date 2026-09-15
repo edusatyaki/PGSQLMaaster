@@ -100,22 +100,33 @@ the module fills.
 
 ## Lecture notes
 
-The slide decks that accompany the course live in `assets/notes.js` — one list, rendered in two
-places so the URLs never drift:
+`notes.html` is a console rather than a list of links: a rail of numbered topics on the left, and
+the deck itself embedded in the panel beside it, so a student never leaves the site to read one.
+Modelled on the [Data World](https://satyakidas-sys.github.io/DBMS/) notes site, which is where
+the embed idea and the topic ordering came from.
 
-| Topic | Where it appears |
-| --- | --- |
-| Data modelling | `notes.html` |
-| Joins | `notes.html` |
-| Set operations | `notes.html` |
-| Non-correlated subqueries | `notes.html` **and** step 03's *About this step* panel |
-| Correlated subqueries | `notes.html` **and** step 03's *About this step* panel |
-| Normalisation | `notes.html` |
+It is the one page that wears a different skin — near-black with cyan and magenta, a power-on
+before the console opens. Everything is scoped under `.ntmod`, so the neon stays on that page and
+the shared chrome (top bar, context bar, footer) is unchanged.
 
-A deck is attached to a step by giving it a `step` key matching a nav id; `Shell.ctx()` then
-renders it under that step's About panel. Everything else shows on the Notes page only. The decks
-are hosted on Canva and open in a new tab — they are the one part of this site that is not
-self-contained.
+| # | Topic | Also appears |
+| --- | --- | --- |
+| 01 | Data modelling | — |
+| 02 | Joins | — |
+| 03 | Set operations | — |
+| 04 | Non-correlated subqueries | step 03's *About this step* panel |
+| 05 | Correlated subqueries | step 03's *About this step* panel |
+| 06 | Normalisation | — |
+
+The decks live in `assets/notes.js`, each with a `view` URL for opening in Canva and an `embed`
+URL (`?embed&hide_controls=1`) for the console. A deck given a `step` key matching a nav id also
+renders under that step's About panel — that is how the two subquery decks reach step 03.
+
+Deep links work: `notes.html#joins` opens that deck directly, on load and on hash change.
+
+The decks are hosted on Canva, so this is the one part of the site that is not self-contained.
+If a deck's Canva sharing is not public, students will see a sign-in wall in the panel rather
+than the slides.
 
 ## Full screen
 
