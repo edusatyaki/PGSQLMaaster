@@ -12,6 +12,7 @@
     { id: "subqueries", step: "03", label: "Subqueries", href: "subqueries.html" },
     { id: "windows",    step: "04", label: "Windows",    href: "windows.html" },
     { id: "roadmap",    step: "05", label: "Roadmap",    href: "roadmap.html" },
+    { id: "rapidfire", step: "06", label: "Rapid fire", href: "rapidfire.html" },
     { id: "board",      step: "",   label: "Leaderboard", href: "leaderboard.html" }
   ];
 
@@ -82,6 +83,12 @@
       about: "Tick problems off as you solve them and your progress is saved for the batch. The " +
              "leaderboard <b>ranks on solves confirmed against your real LeetCode and HackerRank " +
              "profiles</b>, so a ticked box earns points on the page but no position on the board." },
+    rapidfire: { title: "Rapid fire", meta: "100 questions · 20 seconds each · no going back",
+      about: "A timed round over the whole syllabus — data and DBMS, schema and keys, " +
+             "DDL/DML/TCL/DCL, querying, PostgreSQL functions and NULL handling. Four options " +
+             "a question, answered with a click or the <b>1</b>–<b>4</b> / <b>A</b>–<b>D</b> keys. " +
+             "A correct answer scores 10 plus up to 5 for speed; running out of time scores 0. " +
+             "Your result is written to the class sheet when the round ends." },
     board: { title: "Leaderboard", meta: "Weekly and all-time · ranked on verified solves",
       about: "Ranked on solves confirmed against real profiles, not on ticked boxes. Rank movement " +
              "compares like with like — this week against last week, or the standing now against " +

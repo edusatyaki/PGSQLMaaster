@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rapid fire — PostgreSQL Master</title>
+<meta name="description" content="A timed 100-question round over the whole syllabus: four options, twenty seconds each, no going back.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234d9bff' stroke-width='2'%3E%3Cellipse cx='12' cy='5.5' rx='8' ry='3'/%3E%3Cpath d='M4 5.5v13c0 1.7 3.6 3 8 3s8-1.3 8-3v-13M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="assets/theme.css">
+<link rel="stylesheet" href="assets/dbms.css">
+<style>
+  /* the round sits inside the site shell rather than owning the viewport */
+  .dbhost{background:var(--ground); padding:20px 0 30px}
+  .dbmod{
+    background:var(--white); border:1px solid var(--line); border-radius:var(--r-lg);
+    overflow:hidden; box-shadow:var(--shadow); position:relative;
+  }
+  .dbmod:fullscreen{border:0; border-radius:0; height:100vh; overflow:auto}
+</style>
+</head>
+<body>
+
+<header data-shell></header>
+
+<div data-ctx></div>
+
+<main>
+<div class="dbhost">
+  <div class="wrap">
+    <div class="dbmod" id="dbmod">
+<!-- ============================= START ============================= -->
+<section id="screen-start" class="screen is-active">
+
+  <header class="topbar">
+    <div id="quiz-title" class="wordmark">DBMS <i>&amp;</i> SQL <i>Rapid Fire</i></div>
+    <div class="topbar-right">
+      <span class="stepchip"><b id="meta-count">100</b> questions</span>
+      <span class="stepchip"><b id="meta-secs">20</b> sec each</span>
+      <span class="stepchip"><b>4</b> options</span>
+    </div>
+  </header>
+
+  <div class="banner">
+    <span class="tag">START</span>
+    <p id="quiz-subtitle">100 questions · 20 seconds each · no going back</p>
+  </div>
+
+  <div class="wrap start-wrap">
+   <div class="start-grid">
+
+    <div class="card">
+      <div class="card-head"><span>Student details</span></div>
+      <div class="card-body">
+        <label class="field">
+          <span>Full name</span>
+          <input id="in-name" type="text" autocomplete="name" placeholder="e.g. Riya Sharma" maxlength="60">
+        </label>
+        <div class="field-row">
+          <label class="field" id="field-section">
+            <span>Section</span>
+            <select id="in-section"></select>
+          </label>
+          <label class="field">
+            <span>Enrolment number</span>
+            <input id="in-enrolment" type="text" inputmode="text" autocomplete="off"
+                   placeholder="e.g. 2024CSE0142" maxlength="30" spellcheck="false">
+          </label>
+        </div>
+        <p id="form-error" class="form-error" role="alert"></p>
+        <button id="btn-start" class="btn btn-go btn-block" type="button">▶&nbsp; Start the round</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><span>How the round works</span></div>
+      <div class="card-body">
+        <ul class="rules">
+          <li>The screen goes fullscreen and the clock starts the moment a question appears. No pausing, no going back.</li>
+          <li>Answer with a click or tap — or press <kbd>1</kbd>–<kbd>4</kbd> / <kbd>A</kbd>–<kbd>D</kbd>.</li>
+          <li>A correct answer scores 10, plus up to 5 more for speed. Running out of time scores 0.</li>
+          <li>Your progress is recorded as you go, and your result is written to the class sheet when the round ends.</li>
+          <li id="privacy-note">Recorded for this round: name, section, enrolment number, network address, progress and score.</li>
+        </ul>
+        <p class="covers"><b>Covers</b> Data &amp; DBMS · Schema and Keys · DDL / DML / TCL / DCL ·
+          Querying · PostgreSQL Functions · NULL handling <span id="footer-note"></span></p>
+      </div>
+    </div>
+
+   </div>
+  </div>
+</section>
+
+<!-- ============================== QUIZ ============================== -->
+<section id="screen-quiz" class="screen">
+
+  <header class="topbar">
+    <div class="wordmark wordmark-sm">RAPID <i>FIRE</i></div>
+    <div class="topbar-right">
+      <span class="stepchip stepchip-num"><b id="q-counter">1 / 100</b></span>
+      <span class="hstat"><span>Score</span><b id="stat-score">0</b></span>
+      <span class="hstat"><span>Streak</span><b id="stat-streak">0</b></span>
+    </div>
+  </header>
+
+  <div class="progress"><div id="progress-fill" class="progress-fill"></div></div>
+
+  <div class="banner">
+    <span class="tag" id="q-topic">TOPIC</span>
+    <p>Read carefully — the answer locks the moment you pick it.</p>
+  </div>
+
+  <div class="wrap">
+    <div class="quiz-grid">
+
+      <div class="card card-timer">
+        <div class="card-head"><span>Time</span></div>
+        <div class="card-body">
+          <div id="timer" class="timer">
+            <svg viewBox="0 0 120 120" aria-hidden="true">
+              <circle class="ring-track" cx="60" cy="60" r="52"></circle>
+              <circle id="ring-progress" class="ring-progress" cx="60" cy="60" r="52"></circle>
+            </svg>
+            <div id="timer-value" class="timer-value">20</div>
+          </div>
+          <p class="timer-note">seconds left</p>
+        </div>
+      </div>
+
+      <div id="q-card" class="card card-question">
+        <div class="card-head"><span>Question</span></div>
+        <div class="card-body">
+          <p id="q-text" class="q-text">Question</p>
+          <div id="options" class="options"></div>
+        </div>
+      </div>
+
+    </div>
+
+    <div id="flash" class="flash"></div>
+    <p class="hint">Keys <kbd>1</kbd> <kbd>2</kbd> <kbd>3</kbd> <kbd>4</kbd> or <kbd>A</kbd> <kbd>B</kbd> <kbd>C</kbd> <kbd>D</kbd>
+      · <span id="q-total">100</span> questions in this round</p>
+  </div>
+</section>
+
+<!-- ============================= RESULT ============================= -->
+<section id="screen-result" class="screen">
+
+  <header class="topbar">
+    <div class="wordmark wordmark-sm">RAPID <i>FIRE</i></div>
+    <div class="topbar-right">
+      <button id="btn-retry" class="btn btn-go btn-sm" type="button">▶&nbsp; Play again</button>
+      <button id="btn-review-again" class="btn btn-ghost btn-sm" type="button">Back to start</button>
+    </div>
+  </header>
+
+  <div class="banner">
+    <span class="tag">RESULT</span>
+    <p id="res-verdict">Round complete.</p>
+  </div>
+
+  <div class="wrap">
+    <div class="result-grid">
+
+      <div class="card card-score">
+        <div class="card-head"><span>Score</span></div>
+        <div class="card-body score-body">
+          <div class="score-ring">
+            <svg viewBox="0 0 160 160" aria-hidden="true">
+              <circle class="ring-track" cx="80" cy="80" r="68"></circle>
+              <circle id="res-ring-fill" class="res-ring-fill" cx="80" cy="80" r="68"></circle>
+            </svg>
+            <div class="score-ring-label">
+              <strong id="res-accuracy">0%</strong>
+              <span>accuracy</span>
+            </div>
+          </div>
+          <div class="score-meta">
+            <h2 id="res-name">Player</h2>
+            <p id="res-ident" class="ident"></p>
+            <p class="big-score"><strong id="res-score">0</strong> points</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="card card-stats">
+        <div class="card-head"><span>Breakdown</span></div>
+        <div class="card-body">
+          <div class="stat-grid">
+            <div class="stat"><strong id="res-correct">0</strong><span>Correct</span></div>
+            <div class="stat"><strong id="res-wrong">0</strong><span>Wrong</span></div>
+            <div class="stat"><strong id="res-skipped">0</strong><span>Timed out</span></div>
+            <div class="stat"><strong id="res-streak">0</strong><span>Best streak</span></div>
+            <div class="stat"><strong id="res-time">00:00</strong><span>Total time</span></div>
+            <div class="stat"><strong id="res-avg">0s</strong><span>Avg / question</span></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="card">
+      <div class="card-head"><span>Topic breakdown</span></div>
+      <div class="card-body"><div id="topic-bars" class="topic-bars"></div></div>
+    </div>
+
+    <div class="card" id="leaderboard-card">
+      <div class="card-head"><span>Leaderboard</span></div>
+      <div class="card-body"><div id="leaderboard"><p class="muted">—</p></div></div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <span>Review</span>
+        <button id="review-toggle" class="review-toggle" type="button" aria-expanded="false">
+          <span>What you missed (<span id="review-count">0</span>)</span>
+          <span id="review-caret">▼</span>
+        </button>
+      </div>
+      <div class="card-body">
+        <div id="review-list" class="review-list"></div>
+      </div>
+    </div>
+
+    <p id="save-status" class="save-status is-idle">—</p>
+  </div>
+</section>
+
+<!-- The module shipped its own footer credit here. Removed: the site has one
+     canonical fixed footer, and this one collided with its .sitefoot class,
+     giving two fixed bars stacked on top of each other. -->
+
+    </div>
+  </div>
+</div>
+</main>
+
+<footer data-shell></footer>
+
+<script src="assets/shell.js"></script>
+<script>
+  Shell.mount("rapidfire");
+  Shell.ctx("rapidfire");
+</script>
+<script src="assets/dbms-config.js"></script>
+<script src="assets/dbms-questions.js"></script>
+<script src="assets/dbms-app.js"></script>
+</body>
+</html>

@@ -1,6 +1,6 @@
 # PostgreSQL Master
 
-The XShare SQL course as **one site**. Five teaching resources that used to live in five separate
+The XShare SQL course as **one site**. Six teaching resources that used to live in six separate
 repositories are merged here — their code, not links to them — sequenced as a single path and
 rebuilt on one design system.
 
@@ -15,6 +15,7 @@ rebuilt on one design system.
 | 03 | [`subqueries.html`](subqueries.html) | 35 steps. As the trace advances, exactly the rows the inner query touches light up in the dataset panel. |
 | 04 | [`windows.html`](windows.html) | Interactive window-function visualiser. Change the function, partition, ordering or frame and the answer recomputes. |
 | 05 | [`roadmap.html`](roadmap.html) | 379 practice problems, progress tracking, and a leaderboard ranked on verified solves. With [`join.html`](join.html) and [`leaderboard.html`](leaderboard.html). |
+| 06 | [`rapidfire.html`](rapidfire.html) | A timed 100-question round over the whole syllabus — four options, twenty seconds each, no going back. Results are written to a Google Sheet. |
 
 Step 02 is deliberately a reference rather than a lesson: it is the dictionary, the rest is the
 grammar.
@@ -30,13 +31,14 @@ as-is.
 ```
 index.html              the path
 workbook.html  reference.html  subqueries.html  windows.html
-roadmap.html   join.html       leaderboard.html
+roadmap.html   join.html       leaderboard.html  rapidfire.html
 assets/theme.css        THE design system — every page draws from it
 assets/shell.js         the shared top bar, footer and module pager
 assets/sqlhl.js         SQL highlighter (shared by the reference)
 assets/<module>.css/.js one pair per module
 assets/workbook-data.js 73 problems      assets/reference-data.js  459 functions
 data/roadmap.json       379 problems     assets/config.js          Apps Script endpoint
+assets/dbms-questions.js 100 MCQs        assets/dbms-config.js     its Apps Script endpoint
 ```
 
 No build step, no framework, no external requests — no web fonts, no CDN. Open `index.html` in a
@@ -97,14 +99,15 @@ The footer is fixed to the viewport on every page, and its height is reserved on
 nothing is ever hidden underneath it — on the app pages that reservation also shrinks the box
 the module fills.
 
-## The roadmap backend
+## The two backends
 
-Step 05 still talks to the same Google Apps Script web app and the same sheet — `assets/config.js`
-is unchanged. **That means this site and the original SQL Roadmap site are two front doors onto
-one sheet.** Retire the old one, or point students at only one of them.
+Steps 05 and 06 each talk to their own Google Apps Script web app and their own sheet, unchanged:
+`assets/config.js` for the roadmap, `assets/dbms-config.js` for the rapid-fire round. **That means
+this site and the two original sites are each two front doors onto one sheet.** Retire the
+originals, or point students at only one of each.
 
-Backend source, setup and the verification design stay in the
-[SQLRoadmap](https://github.com/edusatyaki/SQLRoadmap) repository.
+Backend source and setup stay in [SQLRoadmap](https://github.com/edusatyaki/SQLRoadmap) and
+[DBMSExam](https://github.com/edusatyaki/DBMSExam).
 
 ---
 
