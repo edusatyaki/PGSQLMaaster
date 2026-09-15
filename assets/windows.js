@@ -93,12 +93,28 @@ const fmt = v => v === null || v === undefined ? null : (isCount() ? String(v) :
 
 /* ------------------------------------------------------------------ fit */
 function fit(){
-  /* merged: scale against the slide's own container so it can sit inside the
-     site shell. In fullscreen the container IS the screen, so this still
-     fills it exactly as the standalone version did. */
-  const host = $("#stage").getBoundingClientRect();
-  const s = Math.min(host.width / 1600, host.height / 900);
-  $("#slide").style.transform = "translate(-50%, -50%) scale(" + s + ")";
+  /* The slide is a fixed 1600x900 canvas. Fitting it to the stage keeps every
+     part of it on screen, but on a small window that shrinks its smallest type
+     (12px) past readability — at 1280x800 it was landing near 7px. So: fit when
+     there is room, and never go below a floor where 12px still renders ~10px.
+     Under the floor the stage scrolls instead of shrinking further. */
+  var FLOOR = 0.82;
+  var stage = $("#stage"), slide = $("#slide");
+  var sizer = document.getElementById("slidesizer");
+  if (!sizer) {
+    sizer = document.createElement("div");
+    sizer.id = "slidesizer";
+    slide.parentNode.insertBefore(sizer, slide);
+    sizer.appendChild(slide);
+  }
+  var host = stage.getBoundingClientRect();
+  var s = Math.max(FLOOR, Math.min(host.width / 1600, host.height / 900));
+  slide.style.left = "0";
+  slide.style.top = "0";
+  slide.style.transformOrigin = "0 0";
+  slide.style.transform = "scale(" + s + ")";
+  sizer.style.width = (1600 * s) + "px";
+  sizer.style.height = (900 * s) + "px";
 }
 window.addEventListener("resize", fit);
 if (window.ResizeObserver) new ResizeObserver(fit).observe($("#stage"));

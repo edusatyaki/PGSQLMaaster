@@ -9,26 +9,14 @@
 <link rel="stylesheet" href="assets/theme.css">
 <link rel="stylesheet" href="assets/workbook.css">
 </head>
-<body>
+<body class="fixed">
 
 <header data-shell></header>
 
-<div class="pagehead">
-  <div class="wrap pagehead-row">
-    <div>
-      <div class="eyebrow">Step 01 · Start here</div>
-      <h1>Practice workbook</h1>
-      <p>
-        73 worked problems across 17 units. Read the question, then <b>watch the answer type
-        itself out</b> and run it to see the exact result — with the table's structure diffed
-        before and after on the left.
-      </p>
-    </div>
-  </div>
-</div>
+<div data-ctx></div>
 
 <main>
-<div class="wbhost">
+<div class="fillhost">
   <div class="wrap">
     <div class="wb" id="wb">
 
@@ -109,7 +97,6 @@
   </div>
 </div>
 
-<div class="wrap"><div id="pager"></div></div>
 </main>
 
 <div id="overlay">
@@ -125,7 +112,7 @@
 <script src="assets/shell.js"></script>
 <script>
   Shell.mount("workbook");
-  document.getElementById("pager").innerHTML = Shell.pager("workbook");
+  Shell.ctx("workbook");
 </script>
 <script src="assets/workbook-data.js"></script>
 <script src="assets/workbook.js"></script>

@@ -55,6 +55,7 @@
   --shadow:0 5px 15px rgba(0,0,0,.06);
   --shadow-lift:0 12px 28px rgba(6,115,249,.13);
   --topbar-h:58px;
+  --ctx-h:46px;
 }
 
 /* ------------------------------------------------------------------ reset */
@@ -247,6 +248,62 @@ table.grid .nil, table.grid .nullcell{color:var(--ink-3); font-style:italic}
 .banner b{color:var(--ink)}
 .banner.warn{background:var(--warn-wash); border-color:#f0dcb4}
 .banner.bad{background:var(--bad-wash); border-color:#f5cfcb}
+
+
+/* ================================================================= context bar
+   Module pages carried a 209px marketing header that pushed the actual module
+   below the fold and forced two scrollbars (page + panel). This replaces it:
+   one compact row with the step, its title, the blurb behind a disclosure, and
+   prev/next always in reach. */
+.ctxbar{
+  position:sticky; top:var(--topbar-h); z-index:50; min-height:var(--ctx-h);
+  background:var(--ground); border-bottom:1px solid var(--line);
+  display:flex; align-items:center;
+}
+.ctxbar-in{
+  max-width:1180px; margin:0 auto; padding:0 24px; width:100%;
+  display:flex; align-items:center; gap:12px; min-height:var(--ctx-h);
+}
+.ctxbar .step-no{
+  font-family:var(--mono); font-size:11px; font-weight:700; letter-spacing:.06em;
+  background:var(--accent-solid); color:#fff; padding:3px 7px; border-radius:var(--r-sm);
+  flex-shrink:0;
+}
+.ctxbar h1{font-size:15.5px; font-weight:700; letter-spacing:-.005em; flex-shrink:0}
+.ctxbar .meta{
+  font-size:13px; color:var(--ink-2); overflow:hidden; text-overflow:ellipsis;
+  white-space:nowrap; min-width:0; flex:1;
+}
+.ctxbar .acts{display:flex; align-items:center; gap:7px; flex-shrink:0; margin-left:auto}
+.ctx-about{
+  background:var(--white); border-bottom:1px solid var(--line);
+  font-size:15px; color:var(--ink-2); line-height:1.6;
+}
+.ctx-about .wrap{padding-top:16px; padding-bottom:18px; max-width:82ch}
+.ctx-about b{color:var(--ink)}
+
+/* app pages: the module owns the viewport, so only its own panes scroll */
+body.fixed{height:100vh; overflow:hidden; display:flex; flex-direction:column}
+body.fixed main{flex:1; min-height:0; display:flex; flex-direction:column}
+body.fixed .sitefoot{display:none}
+.fillhost{flex:1; min-height:0; display:flex; flex-direction:column; background:var(--ground)}
+.fillhost > .wrap{flex:1; min-height:0; width:100%; display:flex; flex-direction:column;
+                  padding-top:14px; padding-bottom:14px}
+/* width:100% matters: `margin:0 auto` on a column flex item disables cross-axis
+   stretch, so without it .wrap shrinks to its content instead of filling. */
+.fillhost.bleed > .wrap{max-width:none; padding-left:14px; padding-right:14px}
+
+/* short or narrow screens: stacking and scrolling beat a squeezed panel */
+@media (max-width:900px), (max-height:600px){
+  body.fixed{height:auto; overflow:visible; display:block}
+  body.fixed main{display:block}
+  body.fixed .sitefoot{display:block}
+  .fillhost{display:block}
+  .fillhost > .wrap{display:block}
+  .ctxbar{position:static}
+  .ctxbar-in{flex-wrap:wrap; padding-top:8px; padding-bottom:8px}
+  .ctxbar .meta{flex-basis:100%; white-space:normal}
+}
 
 /* module pager, emitted by Shell.pager() */
 .modpager{display:flex; flex-wrap:wrap; justify-content:space-between; gap:14px;

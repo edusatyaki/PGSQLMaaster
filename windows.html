@@ -10,29 +10,16 @@
 <link rel="stylesheet" href="assets/windows.css">
 <style>
   /* the slide sits inside the site shell rather than owning the viewport */
-  .slidehost{padding:26px 0 44px; background:var(--ground)}
   </style>
 </head>
-<body class="app">
+<body class="fixed">
 
 <header data-shell></header>
 
-<div class="pagehead">
-  <div class="wrap pagehead-row">
-    <div>
-      <div class="eyebrow">Step 04 · Concept</div>
-      <h1>Window functions</h1>
-      <p>
-        Most confusion about window functions is really confusion about one question:
-        <b>which rows can the current row see?</b> Change the function, the partition, the
-        ordering or the frame below and the window — and the answer — recompute live.
-      </p>
-    </div>
-  </div>
-</div>
+<div data-ctx></div>
 
 <main>
-<div class="slidehost">
+<div class="fillhost bleed">
   <div class="wrap">
 
 <div class="stage" id="stage">
@@ -157,7 +144,6 @@
 </div>
 </div>  </div>
 </div>
-<div class="wrap"><div id="pager"></div></div>
 </main>
 
 <footer data-shell></footer>
@@ -165,7 +151,7 @@
 <script src="assets/shell.js"></script>
 <script>
   Shell.mount("windows");
-  document.getElementById("pager").innerHTML = Shell.pager("windows");
+  Shell.ctx("windows");
 </script>
 <script src="assets/windows.js"></script>
 </body>

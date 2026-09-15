@@ -11,37 +11,28 @@
 <style>
   /* the walkthrough was a full-viewport slide; inside the shell it becomes a
      bounded panel that keeps its own internal scrolling */
-  .sqhost{padding:26px 0 44px; background:var(--ground)}
   .sqmod{
     background:var(--white); border:1px solid var(--line); border-radius:12px;
     overflow:hidden; box-shadow:0 5px 15px rgba(0,0,0,.06);
   }
-  .sqmod .app{height:min(80vh,760px); min-height:520px}
+  .sqmod{flex:1; min-height:0; display:flex; flex-direction:column}
+  .sqmod .app{height:100%; min-height:0}
   .sqmod:fullscreen{border:0; border-radius:0}
   .sqmod:fullscreen .app{height:100vh; max-height:none}
-  @media (max-width:900px){ .sqmod .app{height:auto; min-height:0} }
+  @media (max-width:900px), (max-height:600px){
+    .sqmod{display:block}
+    .sqmod .app{height:auto; min-height:0}
+  }
   </style>
 </head>
-<body>
+<body class="fixed">
 
 <header data-shell></header>
 
-<div class="pagehead">
-  <div class="wrap pagehead-row">
-    <div>
-      <div class="eyebrow">Step 03 · Concept</div>
-      <h1>Inner query, outer query</h1>
-      <p>
-        The dataset stays on the left the whole way through. As the trace steps forward,
-        <b>exactly the rows the inner query touches light up</b> — so you can watch a correlated
-        subquery re-run once per outer row instead of being told that it does.
-      </p>
-    </div>
-  </div>
-</div>
+<div data-ctx></div>
 
 <main>
-<div class="sqhost">
+<div class="fillhost">
   <div class="wrap">
     <div class="sqmod" id="sqmod">
 
@@ -73,7 +64,6 @@
     </div>
   </div>
 </div>
-<div class="wrap"><div id="pager"></div></div>
 </main>
 
 <footer data-shell></footer>
@@ -81,7 +71,7 @@
 <script src="assets/shell.js"></script>
 <script>
   Shell.mount("subqueries");
-  document.getElementById("pager").innerHTML = Shell.pager("subqueries");
+  Shell.ctx("subqueries");
 </script>
 <script src="assets/subqueries.js"></script>
 </body>

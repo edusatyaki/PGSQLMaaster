@@ -122,7 +122,7 @@
      The signed-in handle is appended to it so students can still see who the
      browser thinks they are. */
   function mountNav(current) {
-    if (window.Shell) Shell.mount(current);
+    if (window.Shell) { Shell.mount(current); Shell.ctx(current); }
     var s = store.student();
     var bar = document.querySelector(".navscroll");
     if (s && bar) {
