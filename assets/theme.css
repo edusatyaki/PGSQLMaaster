@@ -1,50 +1,51 @@
 /* ===========================================================================
    PostgreSQL Master — the single design system
    ---------------------------------------------------------------------------
-   Every module on this site draws from this file. The five sources it was
-   merged from each carried their own skin (pgAdmin dark, VS Code dark, two
-   light variants); all of that is gone. One palette, one type scale, one SQL
-   token colouring, light only — there is no dark palette to fall out of sync.
-   Palette is the Newton School system already used across the batch's sites.
+   Every module on this site draws from this file. One palette, one type scale,
+   one SQL token colouring. Dark only — there is no light palette to fall out
+   of sync, and no toggle to leave half the site untested.
+   Token names are kept from the original light system so module CSS did not
+   have to be rewritten: --white is the raised SURFACE (not the colour white),
+   and --ink/--ink-2/--ink-3 run light-to-dim rather than dark-to-light.
    =========================================================================== */
 
 :root{
   /* brand ---------------------------------------------------------------- */
-  --accent:#0673f9;        /* borders, focus ring, rules — never behind white text */
-  --accent-solid:#0066e8;  /* filled surfaces carrying white text (5.17:1) */
-  --accent-deep:#0052cc;   /* links, hover */
-  --accent-wash:#e8f1fe;   /* tinted backgrounds */
-  --accent-line:#b9d4fb;
+  --accent:#4d9bff;        /* borders, focus ring, rules */
+  --accent-solid:#2f6fe4;  /* filled surfaces carrying white text */
+  --accent-deep:#9cc6ff;   /* links and label text — LIGHT on dark */
+  --accent-wash:#16243a;   /* tinted background */
+  --accent-line:#31455f;
 
-  /* ink ------------------------------------------------------------------ */
-  --ink:#16191d;
-  --ink-2:#5b6271;
-  --ink-3:#6b7484;   /* darkened from the source palette's #8c95a6: that value is
-                        3.02:1 on white and this token carries real text (step
-                        numbers, row counts, hints) on every page. Now 4.71:1. */
+  /* ink — light to dim --------------------------------------------------- */
+  --ink:#e9edf2;
+  --ink-2:#b4becc;
+  --ink-3:#8f9aab;
 
   /* surfaces ------------------------------------------------------------- */
-  --white:#ffffff;
-  --ground:#f6f7f9;
-  --line:#e1e5ea;
-  --line-soft:#eceff3;
+  --white:#161b22;      /* raised surface (cards, panels, editors) */
+  --ground:#0e1116;     /* page background */
+  --line:#2c3440;
+  --line-soft:#222935;
+  --band:#1b2230;       /* contrasting band (hero, footer) */
+  --band-fg:#e9edf2;
 
   /* semantic ------------------------------------------------------------- */
-  --good:#0a6b43;   --good-wash:#e6f6ee;
-  --warn:#8a5a00;   --warn-wash:#fdf3e2;
-  --bad:#b3261e;    --bad-wash:#fdecea;
-  --note:#5b3bb3;   --note-wash:#f0ecfb;
+  --good:#74dfa2;   --good-wash:#11291d;   --good-line:#2f6b49;
+  --warn:#f0c274;   --warn-wash:#2a2114;   --warn-line:#6d5423;
+  --bad:#ff9d96;    --bad-wash:#2d1618;    --bad-line:#7a3733;
+  --note:#c9b3ff;   --note-wash:#221a33;   --note-line:#4b3a78;
 
   /* SQL syntax — one palette for every module that prints SQL ------------ */
-  --sql-kw:#0033b3;
-  --sql-ctrl:#7b1fa2;
-  --sql-str:#a31515;
-  --sql-num:#0b7a4b;
-  --sql-com:#107c10;
-  --sql-fn:#795e26;
-  --sql-type:#20707f;
-  --sql-meta:#a04a20;
-  --sql-punct:#3c4350;
+  --sql-kw:#7cb7f0;
+  --sql-ctrl:#d7a6e8;
+  --sql-str:#e0a080;
+  --sql-num:#b5cea8;
+  --sql-com:#8fbf8f;
+  --sql-fn:#e6d9a3;
+  --sql-type:#6fd3bd;
+  --sql-meta:#e0bd85;
+  --sql-punct:#c2cbd8;
 
   /* type ----------------------------------------------------------------- */
   --sans:Arial,Helvetica,sans-serif;
@@ -52,17 +53,17 @@
 
   /* form ----------------------------------------------------------------- */
   --r-sm:4px; --r:6px; --r-lg:12px;
-  --shadow:0 5px 15px rgba(0,0,0,.06);
-  --shadow-lift:0 12px 28px rgba(6,115,249,.13);
+  --shadow:0 5px 16px rgba(0,0,0,.4);
+  --shadow-lift:0 14px 30px rgba(0,0,0,.5);
   --topbar-h:58px;
   --ctx-h:46px;
+  --foot-h:42px;
 }
-
 /* ------------------------------------------------------------------ reset */
 *{box-sizing:border-box;margin:0;padding:0}
-html{-webkit-text-size-adjust:100%}
+html{-webkit-text-size-adjust:100%; color-scheme:dark}
 body{
-  font-family:var(--sans); color:var(--ink); background:var(--white);
+  font-family:var(--sans); color:var(--ink); background:var(--ground);
   font-size:16px; line-height:1.6; -webkit-font-smoothing:antialiased;
 }
 a{color:var(--accent-deep)}
@@ -79,7 +80,7 @@ img{max-width:100%}
 /* ----------------------------------------------------------------- topbar */
 .topbar{
   position:sticky; top:0; z-index:60; height:var(--topbar-h);
-  background:var(--white); border-bottom:1px solid var(--line);
+  background:var(--band); border-bottom:1px solid var(--line);
   display:flex; align-items:center;
 }
 .topbar-in{
@@ -143,8 +144,8 @@ h1,h2,h3,h4{font-weight:600; letter-spacing:-.01em}
 .btn-quiet{background:var(--white); color:var(--ink); border-color:var(--line); font-weight:400}
 .btn-quiet:hover{background:var(--ground); border-color:var(--ink-3); transform:none; color:var(--ink)}
 .btn-sm{padding:7px 13px; font-size:13px}
-.btn-dark{background:transparent; color:#fff; border-color:#444b57; font-weight:400}
-.btn-dark:hover{background:#242932; border-color:#5d6675; transform:none}
+.btn-dark{background:transparent; color:var(--ink); border-color:var(--line); font-weight:400}
+.btn-dark:hover{background:var(--band); border-color:var(--ink-3); transform:none}
 
 /* ------------------------------------------------------------------ cards */
 .card{
@@ -257,7 +258,7 @@ table.grid .nil, table.grid .nullcell{color:var(--ink-3); font-style:italic}
    prev/next always in reach. */
 .ctxbar{
   position:sticky; top:var(--topbar-h); z-index:50; min-height:var(--ctx-h);
-  background:var(--ground); border-bottom:1px solid var(--line);
+  background:var(--band); border-bottom:1px solid var(--line);
   display:flex; align-items:center;
 }
 .ctxbar-in{
@@ -285,7 +286,8 @@ table.grid .nil, table.grid .nullcell{color:var(--ink-3); font-style:italic}
 /* app pages: the module owns the viewport, so only its own panes scroll */
 body.fixed{height:100vh; overflow:hidden; display:flex; flex-direction:column}
 body.fixed main{flex:1; min-height:0; display:flex; flex-direction:column}
-body.fixed .sitefoot{display:none}
+/* the footer is fixed, so it sits outside the flex flow; body's
+   padding-bottom is what keeps the module clear of it */
 .fillhost{flex:1; min-height:0; display:flex; flex-direction:column; background:var(--ground)}
 .fillhost > .wrap{flex:1; min-height:0; width:100%; display:flex; flex-direction:column;
                   padding-top:14px; padding-bottom:14px}
@@ -297,7 +299,6 @@ body.fixed .sitefoot{display:none}
 @media (max-width:900px), (max-height:600px){
   body.fixed{height:auto; overflow:visible; display:block}
   body.fixed main{display:block}
-  body.fixed .sitefoot{display:block}
   .fillhost{display:block}
   .fillhost > .wrap{display:block}
   .ctxbar{position:static}
@@ -310,11 +311,29 @@ body.fixed .sitefoot{display:none}
           padding:26px 0 0; border-top:1px solid var(--line)}
 .modpager .btn{flex:1 1 auto; min-width:0}
 
-/* ----------------------------------------------------------------- footer */
-.sitefoot{background:var(--ink); color:#8a93a1; padding:40px 0; font-size:14px; margin-top:auto}
-.sitefoot-in{display:flex; flex-wrap:wrap; gap:16px; justify-content:space-between; align-items:center}
-.sitefoot b{color:#fff; font-weight:600}
-.sitefoot a{color:#8ebaff}
+/* ----------------------------------------------------------------- footer
+   Pinned to the viewport on every page. Its height is reserved on <body> so
+   nothing is ever hidden underneath it — on app pages that reservation also
+   shrinks the box the module fills. */
+.sitefoot{
+  position:fixed; left:0; right:0; bottom:0; z-index:65;
+  height:var(--foot-h); display:flex; align-items:center;
+  background:var(--band); border-top:1px solid var(--line);
+  color:var(--ink-2); font-size:13px;
+}
+.sitefoot-in{
+  display:flex; flex-wrap:nowrap; gap:16px; justify-content:space-between;
+  align-items:center; width:100%; min-width:0;
+}
+.sitefoot-in > *{overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+.sitefoot b{color:var(--ink); font-weight:600}
+.sitefoot a{color:var(--accent-deep)}
+body{padding-bottom:var(--foot-h)}
+/* narrow screens: drop the repo link rather than ellipsing the byline */
+@media (max-width:560px){
+  .sitefoot-in > :last-child{display:none}
+  .sitefoot-in{justify-content:center}
+}
 
 /* full-height module pages sit in a flex column so the footer lands correctly */
 body.app{display:flex; flex-direction:column; min-height:100vh}

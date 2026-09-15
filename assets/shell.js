@@ -41,7 +41,7 @@
 
   function footer() {
     return '<div class="wrap sitefoot-in">' +
-      "<div>Ideation &amp; development <b>Satyaki Das</b> · XShare</div>" +
+      "<div>Ideation &amp; development <b>Satyaki Das</b></div>" +
       '<div><a href="https://github.com/edusatyaki">github.com/edusatyaki</a></div>' +
       "</div>";
   }

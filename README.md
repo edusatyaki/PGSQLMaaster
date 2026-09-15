@@ -68,17 +68,34 @@ copied across untouched.
 go fullscreen (`F`) for projecting. Module 03's CSS is scoped under `.sqmod` because it and the
 shared theme both use generic class names — that let its markup and JavaScript stay untouched.
 
-### Two colour values differ from the source palette
+### The palette
 
-Both were failing WCAG AA contrast and both carry real text:
+Dark only, and deliberately so: a single theme means there is no second palette to leave
+half-tested, and no toggle that has to be right on every one of the eight pages. The token
+names carry over from the light system the merge started in, so module CSS did not have to be
+rewritten — which means `--white` is the raised **surface**, not the colour white, and
+`--ink`/`--ink-2`/`--ink-3` run light-to-dim.
 
-| Token | Source | Here | Why |
-| --- | --- | --- | --- |
-| filled accent | `#0673f9` | `#0066e8` | White 15px bold on `#0673f9` is 4.35:1. 15px bold is not "large text", so it needs 4.5:1. Now 5.17:1. The brand `#0673f9` is still used for borders, rules and the focus ring. |
-| `--ink-3` | `#8c95a6` | `#6b7484` | 3.02:1 on white, and this token carries step numbers, row counts and hints on every page. Now 4.71:1. |
+| Token | Value | Used for |
+| --- | --- | --- |
+| `--ground` | `#0e1116` | page background |
+| `--white` | `#161b22` | raised surface: cards, panels, editors |
+| `--band` | `#1b2230` | top bar, context bar, hero, footer |
+| `--line` | `#2c3440` | borders |
+| `--ink` / `--ink-2` / `--ink-3` | `#e9edf2` / `#b4becc` / `#8f9aab` | primary, secondary, meta text |
+| `--accent` | `#4d9bff` | borders, focus ring |
+| `--accent-solid` | `#2f6fe4` | filled surfaces carrying white text |
+| `--accent-deep` | `#9cc6ff` | links and label text — light on dark |
 
-All eight pages were checked: every text node meets AA for its size and weight, and none
-overflows horizontally at 376px.
+SQL tokens have their own dark set (`--sql-kw` through `--sql-punct`), shared by all four
+modules that print SQL.
+
+All eight pages were checked after the switch: every text node meets WCAG AA for its size and
+weight, and none overflows horizontally at 375px.
+
+The footer is fixed to the viewport on every page, and its height is reserved on `<body>` so
+nothing is ever hidden underneath it — on the app pages that reservation also shrinks the box
+the module fills.
 
 ## The roadmap backend
 
@@ -91,4 +108,4 @@ Backend source, setup and the verification design stay in the
 
 ---
 
-Ideation & development [Satyaki Das](https://github.com/edusatyaki) · XShare
+Ideation & development [Satyaki Das](https://github.com/edusatyaki)

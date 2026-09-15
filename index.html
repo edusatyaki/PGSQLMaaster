@@ -9,19 +9,20 @@
 <meta property="og:description" content="From CREATE TABLE to window functions to 379 tracked practice problems — one site, in teaching order.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://edusatyaki.github.io/PGSQLMaaster/">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230066e8' stroke-width='2'%3E%3Cellipse cx='12' cy='5.5' rx='8' ry='3'/%3E%3Cpath d='M4 5.5v13c0 1.7 3.6 3 8 3s8-1.3 8-3v-13M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3'/%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234d9bff' stroke-width='2'%3E%3Cellipse cx='12' cy='5.5' rx='8' ry='3'/%3E%3Cpath d='M4 5.5v13c0 1.7 3.6 3 8 3s8-1.3 8-3v-13M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3'/%3E%3C/svg%3E">
 <link rel="stylesheet" href="assets/theme.css">
 <style>
-.hero{background:var(--ink); color:#fff; padding:72px 0 78px}
-.hero .eyebrow{font-size:12px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:#9fb6d8; margin-bottom:17px}
+.hero{background:var(--band); color:var(--band-fg); padding:72px 0 78px;
+      border-bottom:1px solid var(--line)}
+.hero .eyebrow{font-size:12px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:var(--accent-deep); margin-bottom:17px}
 .hero h1{font-size:48px; line-height:1.13; font-weight:600; letter-spacing:-.022em; max-width:16ch}
-.hero h1 span{color:#6aa8ff}
-.hero p{margin-top:19px; font-size:18.5px; color:#c6ccd6; max-width:62ch}
-.hero code{background:#242932; border-color:#39404b; color:#cfe0ff}
+.hero h1 span{color:var(--accent)}
+.hero p{margin-top:19px; font-size:18.5px; color:var(--ink-2); max-width:62ch}
+.hero code{background:var(--ground); border-color:var(--line); color:var(--accent-deep)}
 .hero-cta{display:flex; flex-wrap:wrap; gap:13px; margin-top:32px}
-.hero-meta{margin-top:40px; padding-top:25px; border-top:1px solid #2a2f38; display:flex; flex-wrap:wrap; gap:36px}
-.hero-meta div{font-size:13px; color:#98a0ad}
-.hero-meta b{display:block; font-size:25px; color:#fff; font-weight:600; line-height:1.3}
+.hero-meta{margin-top:40px; padding-top:25px; border-top:1px solid var(--line); display:flex; flex-wrap:wrap; gap:36px}
+.hero-meta div{font-size:13px; color:var(--ink-2)}
+.hero-meta b{display:block; font-size:25px; color:var(--ink); font-weight:600; line-height:1.3}
 
 .path{position:relative; max-width:840px; margin:0 auto; list-style:none}
 .path::before{content:""; position:absolute; left:23px; top:18px; bottom:18px; width:2px; background:var(--line)}

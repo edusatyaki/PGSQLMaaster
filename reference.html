@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Function reference — PostgreSQL Master</title>
 <meta name="description" content="459 PostgreSQL functions across 21 categories, each with a runnable example and the output it actually produced on PostgreSQL 16.14.">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230066e8' stroke-width='2'%3E%3Cellipse cx='12' cy='5.5' rx='8' ry='3'/%3E%3Cpath d='M4 5.5v13c0 1.7 3.6 3 8 3s8-1.3 8-3v-13M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3'/%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234d9bff' stroke-width='2'%3E%3Cellipse cx='12' cy='5.5' rx='8' ry='3'/%3E%3Cpath d='M4 5.5v13c0 1.7 3.6 3 8 3s8-1.3 8-3v-13M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3'/%3E%3C/svg%3E">
 <link rel="stylesheet" href="assets/theme.css">
 <style>
 .refbar{
@@ -70,7 +70,7 @@
 #nothing{padding:40px 0; text-align:center; color:var(--ink-2)}
 
 /* ---------------------------------------------------------------- drawer */
-#veil{position:fixed; inset:0; background:rgba(22,25,29,.32); opacity:0; pointer-events:none; transition:opacity .18s ease; z-index:70}
+#veil{position:fixed; inset:0; background:rgba(0,0,0,.55); opacity:0; pointer-events:none; transition:opacity .18s ease; z-index:70}
 #veil.on{opacity:1; pointer-events:auto}
 #peek{
   position:fixed; top:0; right:0; bottom:0; width:min(620px,100%);
@@ -97,7 +97,7 @@
 .given{display:flex; flex-direction:column; gap:12px}
 .given-h{font-family:var(--mono); font-size:11.5px; color:var(--ink-2); margin-bottom:5px}
 .done-row{display:flex; align-items:center; gap:14px; margin-top:26px; padding-top:18px; border-top:1px solid var(--line)}
-.done-btn.on, #done-btn.on{background:var(--good-wash); border-color:#a9d9c1; color:var(--good); font-weight:700}
+.done-btn.on, #done-btn.on{background:var(--good-wash); border-color:var(--good-line); color:var(--good); font-weight:700}
 .hint{font-size:12px; color:var(--ink-3); font-family:var(--mono)}
 
 @media (max-width:900px){

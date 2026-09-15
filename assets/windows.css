@@ -1,16 +1,16 @@
 /* Module 04 — window-function visualiser.
    Layout kept exactly as built (a 1600x900 projection slide that scales to
    fit); its private palette now carries the site's shared values. */
-  :root{
+    :root{
     /* Literal values taken from assets/theme.css so this module renders in the
-       site's single palette. Kept as literals rather than var() aliases: the
-       module reuses the same token NAMES (--ink, --line, --mono), so aliasing
-       would create a var() cycle. */
-    --ink:#16191d; --body:#5b6271; --muted:#6b7484; --faint:#6b7484;
-    --line:#e1e5ea; --line2:#eceff3; --surface:#f6f7f9; --surface2:#fafbfc; --white:#ffffff;
-    --blue:#0673f9; --blue-solid:#0066e8; --blue-dk:#0052cc; --blue-tint:#e8f1fe;
-    --green:#0b7a4b; --green-dk:#07603a; --green-tint:#d9f2e6;
-    --red:#b3261e; --red-tint:#fdecea; --amber:#8a5a00; --amber-tint:#fdf3e2;
+       site's single dark palette. Kept as literals rather than var() aliases:
+       the module reuses the same token NAMES (--ink, --line, --mono), so
+       aliasing would create a var() cycle. */
+    --ink:#e9edf2; --body:#b4becc; --muted:#8f9aab; --faint:#8f9aab;
+    --line:#2c3440; --line2:#222935; --surface:#0e1116; --surface2:#131820; --white:#161b22;
+    --blue:#4d9bff; --blue-solid:#2f6fe4; --blue-dk:#9cc6ff; --blue-tint:#16243a;
+    --green:#74dfa2; --green-dk:#a6efc6; --green-tint:#11291d;
+    --red:#ff9d96; --red-tint:#2d1618; --amber:#f0c274; --amber-tint:#2a2114;
     --display:Arial,Helvetica,sans-serif;
     --sans:Arial,Helvetica,sans-serif;
     --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,"Courier New",monospace;
@@ -55,7 +55,7 @@
   .step.done{color:var(--ink)}
   .step.done .n{background:var(--green-tint);color:var(--green-dk)}
   .step.live{background:var(--blue-solid);border-color:var(--blue-solid);color:#fff}
-  .step.live .n{background:#fff;color:var(--blue-dk)}
+  .step.live .n{background:rgba(0,0,0,.3);color:#fff}
 
   .btns{display:flex;gap:8px;align-items:center;flex:0 0 auto}
   .btn{
@@ -64,7 +64,7 @@
   }
   .btn-blue{background:var(--blue-solid);color:#fff}
   .btn-blue:hover{background:var(--blue-dk)}
-  .btn-green{background:var(--green);color:#fff}
+  .btn-green{background:var(--green);color:var(--surface)}
   .btn-green:hover{background:var(--green-dk)}
   .btn-ghost{background:var(--white);color:var(--ink);border-color:var(--line)}
   .btn-ghost:hover{border-color:var(--blue);color:var(--blue)}
@@ -79,7 +79,7 @@
     font-family:var(--mono);font-size:16px;font-weight:600;background:var(--blue-solid);color:#fff;
     padding:5px 12px;border-radius:6px;flex:0 0 auto;line-height:1.2;
   }
-  .narrate p{margin:0;font-size:27px;line-height:1.28;color:#14375E;font-weight:500}
+  .narrate p{margin:0;font-size:27px;line-height:1.28;color:var(--ink);font-weight:500}
   .narrate b{color:var(--ink);font-weight:700}
 
   /* ---------------- body grid ---------------- */
@@ -104,7 +104,7 @@
     border:2px solid var(--line);border-radius:99px;padding:2px 11px;white-space:nowrap;
     font-variant-numeric:tabular-nums;line-height:1.35;
   }
-  .pill.good{color:var(--green-dk);border-color:#A9E7CE;background:var(--green-tint)}
+  .pill.good{color:var(--green-dk);border-color:var(--green);background:var(--green-tint)}
 
   /* ---------------- controls ---------------- */
   .field{margin-bottom:7px}
@@ -123,7 +123,7 @@
   .rowpick{display:flex;gap:7px;align-items:center;margin-top:2px}
   .rowpick .cur{
     flex:1 1 auto;font-family:var(--mono);font-size:17px;font-weight:600;color:var(--ink);
-    background:var(--amber-tint);border:2px solid #F3C77A;border-radius:8px;padding:5px 10px;
+    background:var(--amber-tint);border:2px solid var(--amber);border-radius:8px;padding:5px 10px;
     text-align:center;line-height:1.3;white-space:nowrap;
   }
   .mini{
@@ -134,7 +134,7 @@
 
   /* ---------------- sql ---------------- */
   pre.sql{margin:0;font-family:var(--mono);font-size:17px;line-height:1.58;white-space:pre;overflow:hidden}
-  .kw{color:#8B3DCF;font-weight:600}
+  .kw{color:#d7a6e8;font-weight:600}
   .fn{color:var(--green-dk);font-weight:500}
   .num{color:var(--blue-dk)}
   .clause{
@@ -149,8 +149,8 @@
     border:2px solid var(--line2);font-family:var(--mono);font-size:14.5px;line-height:1.42;color:var(--body);
   }
   .sqlnote b{color:var(--ink)}
-  .sqlnote.trap{background:var(--red-tint);border-color:#F5B5B0;color:#912018}
-  .sqlnote.trap b{color:#912018}
+  .sqlnote.trap{background:var(--red-tint);border-color:var(--red);color:var(--red)}
+  .sqlnote.trap b{color:var(--red)}
 
   /* ---------------- table ---------------- */
   table{border-collapse:collapse;width:100%;table-layout:auto}
@@ -170,8 +170,8 @@
   #rows-tbl tbody tr{cursor:pointer}
   tr.inframe{background:var(--blue-tint)}
   tr.inframe td.mark{color:var(--blue)}
-  tr.current{background:var(--amber-tint);box-shadow:inset 3px 0 0 #B54708,inset -3px 0 0 #B54708}
-  tr.current td{font-weight:700;color:#7A3E02}
+  tr.current{background:var(--amber-tint);box-shadow:inset 3px 0 0 var(--amber),inset -3px 0 0 var(--amber)}
+  tr.current td{font-weight:700;color:var(--amber)}
   tr.current td.mark{color:var(--amber)}
   tr.outframe td{opacity:.34}
   tr.otherpart td{opacity:.26}
@@ -190,11 +190,11 @@
   .chips{display:flex;gap:7px;align-items:center;flex-wrap:wrap;min-width:0}
   .chip{
     font-family:var(--mono);font-size:20px;font-weight:500;padding:6px 12px;border-radius:9px;
-    background:var(--blue-tint);border:2px solid #CFE2FD;color:var(--blue-dk);line-height:1.2;
+    background:var(--blue-tint);border:2px solid var(--blue);color:var(--blue-dk);line-height:1.2;
     font-variant-numeric:tabular-nums;animation:pop .22s both;
   }
   @keyframes pop{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
-  .chip.cur{background:var(--amber-tint);border-color:#F3C77A;color:#7A3E02;font-weight:700}
+  .chip.cur{background:var(--amber-tint);border-color:var(--amber);color:var(--amber);font-weight:700}
   .chip.out{background:var(--surface);border-color:var(--line);color:var(--faint);opacity:.55}
   .chip.ghost{background:var(--white);border-style:dashed;border-color:var(--line);color:var(--faint)}
   .calcline{
@@ -204,7 +204,7 @@
   .calcline b{color:var(--ink)}
   .answer{
     flex:0 0 auto;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;
-    padding:12px 26px;border-radius:12px;background:var(--green-tint);border:2px solid #A9E7CE;min-width:216px;
+    padding:12px 26px;border-radius:12px;background:var(--green-tint);border:2px solid var(--green);min-width:216px;
   }
   .answer .l{font-family:var(--mono);font-size:15px;color:var(--green-dk);text-align:center;line-height:1.25;white-space:nowrap}
   .answer .v{font-family:var(--display);font-weight:700;font-size:47px;color:var(--ink);line-height:1;font-variant-numeric:tabular-nums}

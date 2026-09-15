@@ -87,7 +87,7 @@
   padding:2px 6px; border-radius:3px; border:1px solid var(--line);
   background:var(--ground); color:var(--ink-2);
 }
-.t-ok{background:var(--good-wash); border-color:#a9d9c1; color:var(--good)}
+.t-ok{background:var(--good-wash); border-color:var(--good-line); color:var(--good)}
 .ch-meta.pts,.p-plat .mono{font-family:var(--mono); font-size:11.5px; color:var(--ink-3)}
 .subhead.prem{
   padding:9px 18px; background:var(--note-wash); color:var(--note);
@@ -98,9 +98,9 @@
 /* ------------------------------------------------------------- leaderboard */
 .pod{display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-bottom:24px}
 .place{background:var(--white); border:1px solid var(--line); border-radius:var(--r-lg); padding:18px; text-align:center}
-.place.p1{border-color:#e2c275; background:linear-gradient(180deg,#fffaf0,var(--white))}
-.place.p2{border-color:#cbd2da}
-.place.p3{border-color:#e0c3a8}
+.place.p1{border-color:var(--warn-line); background:linear-gradient(180deg,var(--warn-wash),var(--white))}
+.place.p2{border-color:var(--ink-3)}
+.place.p3{border-color:var(--bad-line)}
 .place .rank{font-family:var(--mono); font-size:12px; color:var(--ink-3)}
 .place .nm{display:block; font-weight:600; font-size:16px; margin:5px 0 2px; word-break:break-word}
 .place .pts{font-family:var(--mono); font-size:13px; color:var(--accent-deep); font-weight:700}
@@ -120,17 +120,17 @@ table.board td.num{text-align:right; font-family:var(--mono); font-variant-numer
 .delta.flat{color:var(--ink-3)} .delta.new{color:var(--accent-deep)}
 
 /* -------------------------------------------------------------------- join */
-.hero-band{background:var(--ink); color:#fff; padding:52px 0}
+.hero-band{background:var(--band); color:var(--band-fg); padding:52px 0}
 .hero-in{
   max-width:1180px; margin:0 auto; padding:0 24px;
   display:grid; grid-template-columns:minmax(0,1fr) minmax(0,420px); gap:44px; align-items:start;
 }
-.hero-band .eyebrow{font-size:11.5px; font-weight:700; letter-spacing:.13em; text-transform:uppercase; color:#9fb6d8}
+.hero-band .eyebrow{font-size:11.5px; font-weight:700; letter-spacing:.13em; text-transform:uppercase; color:var(--accent-deep)}
 .hero-band h1{font-size:38px; line-height:1.18; margin:12px 0; letter-spacing:-.02em}
-.hero-band .lede{color:#c6ccd6; font-size:17px; max-width:56ch}
-.hero-band code{background:#242932; border-color:#39404b; color:#cfe0ff}
+.hero-band .lede{color:var(--ink-2); font-size:17px; max-width:56ch}
+.hero-band code{background:var(--ground); border-color:var(--line); color:var(--accent-deep)}
 .pillrow{display:flex; flex-wrap:wrap; gap:9px; margin-top:20px}
-.pill{font-size:12.5px; color:#c6ccd6; border:1px solid #39404b; border-radius:99px; padding:5px 13px}
+.pill{font-size:12.5px; color:var(--ink-2); border:1px solid var(--line); border-radius:99px; padding:5px 13px}
 .hero-card{background:var(--white); color:var(--ink); border-radius:var(--r-lg); padding:26px 26px 22px; box-shadow:0 18px 40px rgba(0,0,0,.28)}
 .hero-card h2{font-size:20px}
 .field{margin-bottom:14px}
@@ -141,7 +141,7 @@ table.board td.num{text-align:right; font-family:var(--mono); font-variant-numer
   width:100%; height:40px; padding:0 12px; font-size:14.5px;
   border:1px solid var(--line); border-radius:var(--r); background:var(--white); outline:none;
 }
-.field input:focus{border-color:var(--accent); box-shadow:0 0 0 3px rgba(6,115,249,.12)}
+.field input:focus{border-color:var(--accent); box-shadow:0 0 0 3px rgba(77,155,255,.22)}
 .field .hint{font-size:12px; color:var(--ink-3); margin-top:4px}
 .field .err{font-size:12.5px; color:var(--bad); margin-top:4px; font-weight:700}
 .field input[aria-invalid=true]{border-color:var(--bad)}
