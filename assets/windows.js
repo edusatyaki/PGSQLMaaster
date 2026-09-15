@@ -107,8 +107,19 @@ function fit(){
     slide.parentNode.insertBefore(sizer, slide);
     sizer.appendChild(slide);
   }
-  var host = stage.getBoundingClientRect();
-  var s = Math.max(FLOOR, Math.min(host.width / 1600, host.height / 900));
+  /* clientWidth/Height, not getBoundingClientRect: once the stage shows a
+     vertical scrollbar the border-box is wider than the usable content box,
+     and scaling to the former reintroduced a horizontal scrollbar. */
+  var host = {width: stage.clientWidth, height: stage.clientHeight};
+  /* Width always fits: a slide that scrolls sideways reads as broken layout.
+     The floor applies to the height term only, so a short window scrolls
+     vertically instead of shrinking the type past readability. */
+  /* Phones cannot fit a 1600px slide at any readable size: fitting it there
+     produced a ~0.22 scale, i.e. 3px type. Below 900px hold the floor and let
+     the stage pan in both axes — a legible slide you scroll beats a thumbnail. */
+  var s = host.width < 900
+        ? FLOOR
+        : Math.min(host.width / 1600, Math.max(FLOOR, host.height / 900));
   slide.style.left = "0";
   slide.style.top = "0";
   slide.style.transformOrigin = "0 0";

@@ -9,6 +9,9 @@
 <link rel="stylesheet" href="assets/theme.css">
 <link rel="stylesheet" href="assets/windows.css">
 <style>
+  /* .wfmod scopes the module's CSS away from the shared theme; it also has to
+     carry the flex chain so the stage still fills the host */
+  .wfmod{flex:1; min-height:0; display:flex; flex-direction:column}
   /* the slide sits inside the site shell rather than owning the viewport */
   </style>
 </head>
@@ -22,7 +25,7 @@
 <div class="fillhost bleed">
   <div class="wrap">
 
-<div class="stage" id="stage">
+<div class="wfmod"><div class="stage" id="stage">
 <div class="slide" id="slide">
 
   <div class="hdr">
@@ -142,7 +145,7 @@
   </div>
 
 </div>
-</div>  </div>
+</div></div>  </div>
 </div>
 </main>
 
