@@ -110,6 +110,16 @@ img{max-width:100%}
 }
 .navscroll a.on .st{border-color:var(--accent-line); color:var(--accent-deep)}
 
+/* site-wide fullscreen toggle, in every top bar */
+.fsbtn{
+  display:inline-flex; align-items:center; gap:7px; flex-shrink:0; margin-left:8px;
+  background:var(--white); color:var(--ink-2); border:1px solid var(--line);
+  border-radius:var(--r); padding:6px 11px; font-size:13px; white-space:nowrap;
+}
+.fsbtn:hover{border-color:var(--accent); color:var(--ink)}
+.fsbtn[aria-pressed="true"]{background:var(--accent-wash); border-color:var(--accent-line); color:var(--accent-deep)}
+@media (max-width:860px){ .fsbtn span{display:none} .fsbtn{padding:6px 9px} }
+
 /* ------------------------------------------------------------------ pages */
 .band{padding:66px 0}
 .band-grey{background:var(--ground); border-top:1px solid var(--line); border-bottom:1px solid var(--line)}

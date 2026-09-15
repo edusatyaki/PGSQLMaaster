@@ -501,7 +501,9 @@ function toggleFullscreen(){
   else (document.getElementById("stage") || document.documentElement)
         .requestFullscreen().catch(()=>{});
 }
-$("#btn-full").addEventListener("click", toggleFullscreen);
+/* merged: the site-wide control in the top bar owns fullscreen now, so this
+   module no longer binds its own button or the F key — two handlers would
+   toggle twice and cancel out. */
 
 $("#c-fn").addEventListener("change",    e => { state.fn = e.target.value; render(); });
 $("#c-part").addEventListener("change",  e => { state.part = e.target.value; render(); });
@@ -516,7 +518,7 @@ document.addEventListener("keydown", e => {
   if(e.key === "ArrowLeft"){ stopPlay(); go(state.stage - 1); }
   if(e.key === "ArrowDown"){ e.preventDefault(); stopPlay(); stepRow(1); }
   if(e.key === "ArrowUp"){   e.preventDefault(); stopPlay(); stepRow(-1); }
-  if(e.key === "f" || e.key === "F"){ toggleFullscreen(); }
+  /* F is handled site-wide by assets/shell.js */
 });
 
 /* the controls must show what `state` actually holds, not whatever

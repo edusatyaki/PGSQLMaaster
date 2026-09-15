@@ -37,7 +37,9 @@
           (n.step ? '<span class="st">' + n.step + "</span>" : "") +
           "<span>" + esc(n.label) + "</span></a>";
       }).join("") +
-      "</nav></div>";
+      '</nav>' +
+      '<button class="fsbtn" id="fsBtn" type="button" title="Full screen (F)"></button>' +
+      "</div>";
   }
 
   function footer() {
@@ -53,8 +55,68 @@
     if (h) { h.className = "topbar"; h.innerHTML = topbar(current); }
     var f = document.querySelector("footer[data-shell]");
     if (f) { f.className = "sitefoot"; f.innerHTML = footer(); }
+    wireFullscreen();
   }
 
+
+
+  /* ------------------------------------------------------------- fullscreen
+     One control for the whole site, in the top bar of every page. Where a page
+     is built around a single module it carries data-fs-target, and that panel
+     goes fullscreen rather than the document — a projected slide should not
+     bring the site chrome with it. Everywhere else the document goes.
+     The modules that shipped their own button and F key have had them removed,
+     so F toggles exactly one thing on every page. */
+  var FS_IN  = '<svg viewBox="0 0 20 20" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7.5V3h4.5M16.5 7.5V3H12M3 12.5V17h4.5M16.5 12.5V17H12"/></svg>';
+  var FS_OUT = '<svg viewBox="0 0 20 20" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7.5 3v4.5H3M12 3v4.5h4.5M7.5 17v-4.5H3M12 17v-4.5h4.5"/></svg>';
+
+  function fsSupported() {
+    var e = document.documentElement;
+    return !!(e.requestFullscreen || e.webkitRequestFullscreen) &&
+           document.fullscreenEnabled !== false;
+  }
+  function fsOn() { return !!(document.fullscreenElement || document.webkitFullscreenElement); }
+  function fsTarget() {
+    return document.querySelector("[data-fs-target]") || document.documentElement;
+  }
+  function fullscreen() {
+    try {
+      if (fsOn()) {
+        (document.exitFullscreen || document.webkitExitFullscreen).call(document);
+      } else {
+        var el = fsTarget();
+        var req = el.requestFullscreen || el.webkitRequestFullscreen;
+        var p = req.call(el);
+        if (p && p.catch) p.catch(function () {});
+      }
+    } catch (e) {}
+  }
+  function fsSync() {
+    var b = document.getElementById("fsBtn");
+    if (!b) return;
+    var on = fsOn();
+    b.innerHTML = (on ? FS_OUT : FS_IN) + "<span>" + (on ? "Exit" : "Full screen") + "</span>";
+    b.setAttribute("aria-label", on ? "Exit full screen" : "Enter full screen");
+    b.setAttribute("aria-pressed", String(on));
+  }
+  function wireFullscreen() {
+    var b = document.getElementById("fsBtn");
+    if (!b) return;
+    /* a dead control is worse than none */
+    if (!fsSupported()) { b.remove(); return; }
+    b.addEventListener("click", fullscreen);
+    document.addEventListener("fullscreenchange", fsSync);
+    document.addEventListener("webkitfullscreenchange", fsSync);
+    document.addEventListener("keydown", function (e) {
+      if (e.metaKey || e.ctrlKey || e.altKey) return;
+      if (e.key !== "f" && e.key !== "F") return;
+      var t = e.target;
+      if (t && t.closest && t.closest("input,textarea,select,[contenteditable='true']")) return;
+      e.preventDefault();
+      fullscreen();
+    });
+    fsSync();
+  }
 
   /* ---------------------------------------------------------------- context
      One compact row per module page: step, title, a one-line summary, the full
@@ -149,5 +211,6 @@
       "</div>";
   }
 
-  root.Shell = { mount: mount, ctx: ctx, pager: pager, esc: esc, NAV: NAV };
+  root.Shell = { mount: mount, ctx: ctx, pager: pager, esc: esc, NAV: NAV,
+                 fullscreen: fullscreen };
 })(window);

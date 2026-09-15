@@ -99,6 +99,24 @@ The footer is fixed to the viewport on every page, and its height is reserved on
 nothing is ever hidden underneath it — on the app pages that reservation also shrinks the box
 the module fills.
 
+## Full screen
+
+Every page carries a full-screen toggle in the top bar, and `F` does the same thing. Where a page
+is built around a single module it is that panel that goes full screen, not the document — a
+projected slide should not bring the site chrome with it:
+
+| Page | What goes full screen |
+| --- | --- |
+| Workbook, subqueries, windows, rapid fire | the module panel |
+| Home, reference, roadmap, join, leaderboard | the page |
+
+`F` is ignored while the focus is in a text field, so typing it into the reference search or the
+sign-up form does not fire the toggle. The control removes itself where the Fullscreen API is
+unavailable rather than sitting there dead.
+
+Steps 03, 04 and 06 previously each had their own full-screen button and `F` binding; those are
+gone, so one keypress toggles one thing on every page.
+
 ## The two backends
 
 Steps 05 and 06 each talk to their own Google Apps Script web app and their own sheet, unchanged:

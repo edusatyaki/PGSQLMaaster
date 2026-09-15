@@ -392,9 +392,11 @@ function fsToggle(){
           if(r&&r.catch)r.catch(()=>{}); }
   }catch(e){}
 }
-/* a dead control is worse than none: only offer it where it can actually work */
-if(!(root.requestFullscreen||root.webkitRequestFullscreen)||document.fullscreenEnabled===false){
-  fsBtn.hidden=true;
+/* merged: the site-wide control in the top bar owns fullscreen now, so this
+   module's own button was removed from the markup. The block below is kept but
+   inert when the button is absent — two handlers would toggle twice. */
+if(!fsBtn||!(root.requestFullscreen||root.webkitRequestFullscreen)||document.fullscreenEnabled===false){
+  if(fsBtn)fsBtn.hidden=true;
 }else{
   fsBtn.addEventListener('click',fsToggle);
   document.addEventListener('fullscreenchange',fsSync);
@@ -411,7 +413,7 @@ document.addEventListener('keydown',e=>{
   else if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault(); go(cur-1);}
   else if(e.key==='Home'){e.preventDefault(); go(0);}
   else if(e.key==='End'){e.preventDefault(); go(FLAT.length-1);}
-  else if(e.key==='f'||e.key==='F'){e.preventDefault(); if(!fsBtn.hidden)fsToggle();}
+  /* F is handled site-wide by assets/shell.js */
 });
 go(0);
 })();
