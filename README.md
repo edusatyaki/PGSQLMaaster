@@ -98,6 +98,25 @@ The footer is fixed to the viewport on every page, and its height is reserved on
 nothing is ever hidden underneath it — on the app pages that reservation also shrinks the box
 the module fills.
 
+## Lecture notes
+
+The slide decks that accompany the course live in `assets/notes.js` — one list, rendered in two
+places so the URLs never drift:
+
+| Topic | Where it appears |
+| --- | --- |
+| Data modelling | `notes.html` |
+| Joins | `notes.html` |
+| Set operations | `notes.html` |
+| Non-correlated subqueries | `notes.html` **and** step 03's *About this step* panel |
+| Correlated subqueries | `notes.html` **and** step 03's *About this step* panel |
+| Normalisation | `notes.html` |
+
+A deck is attached to a step by giving it a `step` key matching a nav id; `Shell.ctx()` then
+renders it under that step's About panel. Everything else shows on the Notes page only. The decks
+are hosted on Canva and open in a new tab — they are the one part of this site that is not
+self-contained.
+
 ## Full screen
 
 Every page carries a full-screen toggle in the top bar, and `F` does the same thing. Where a page

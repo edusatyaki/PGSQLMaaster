@@ -12,6 +12,7 @@
     { id: "subqueries", step: "03", label: "Subqueries", href: "subqueries.html" },
     { id: "roadmap",    step: "04", label: "Roadmap",    href: "roadmap.html" },
     { id: "rapidfire", step: "05", label: "Rapid fire", href: "rapidfire.html" },
+    { id: "notes",     step: "",   label: "Notes",       href: "notes.html" },
     { id: "board",      step: "",   label: "Leaderboard", href: "leaderboard.html" }
   ];
 
@@ -146,6 +147,10 @@
              "a question, answered with a click or the <b>1</b>–<b>4</b> / <b>A</b>–<b>D</b> keys. " +
              "A correct answer scores 10 plus up to 5 for speed; running out of time scores 0. " +
              "Your result is written to the class sheet when the round ends." },
+    notes: { title: "Lecture notes", meta: "Slide decks for the topics behind the course",
+      about: "The decks handed out alongside the lectures. Two of them — correlated and " +
+             "non-correlated subqueries — also appear under <b>About this step</b> on step 03, " +
+             "where they are most use. They open in Canva in a new tab." },
     board: { title: "Leaderboard", meta: "Weekly and all-time · ranked on verified solves",
       about: "Ranked on solves confirmed against real profiles, not on ticked boxes. Rank movement " +
              "compares like with like — this week against last week, or the standing now against " +
@@ -179,7 +184,14 @@
     about.className = "ctx-about";
     about.id = "aboutBox";
     about.hidden = true;
-    about.innerHTML = '<div class="wrap">' + c.about + "</div>";
+    var decks = (root.notesFor ? root.notesFor(current) : []);
+    about.innerHTML = '<div class="wrap">' + c.about +
+      (decks.length ? '<div class="ctx-notes"><span class="lbl">Lecture notes</span>' +
+        decks.map(function (n) {
+          return '<a href="' + n.url + '" target="_blank" rel="noopener">' +
+                 esc(n.topic) + ' <span aria-hidden="true">\u2197</span></a>';
+        }).join("") + "</div>" : "") +
+      "</div>";
 
     el.replaceWith(bar);
     bar.after(about);
