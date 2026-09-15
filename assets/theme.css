@@ -289,11 +289,13 @@ body.fixed main{flex:1; min-height:0; display:flex; flex-direction:column}
 /* the footer is fixed, so it sits outside the flex flow; body's
    padding-bottom is what keeps the module clear of it */
 .fillhost{flex:1; min-height:0; display:flex; flex-direction:column; background:var(--ground)}
-.fillhost > .wrap{flex:1; min-height:0; width:100%; display:flex; flex-direction:column;
-                  padding-top:14px; padding-bottom:14px}
+/* App pages run full-bleed: capping them at the 1180px document measure left a
+   third of a wide screen empty on either side. Documents keep the measure. */
+.fillhost > .wrap{flex:1; min-height:0; width:100%; max-width:none; display:flex;
+                  flex-direction:column; padding:14px 16px}
 /* width:100% matters: `margin:0 auto` on a column flex item disables cross-axis
    stretch, so without it .wrap shrinks to its content instead of filling. */
-.fillhost.bleed > .wrap{max-width:none; padding-left:14px; padding-right:14px}
+.fillhost.bleed > .wrap{padding-left:14px; padding-right:14px}
 
 /* short or narrow screens: stacking and scrolling beat a squeezed panel */
 @media (max-width:900px), (max-height:600px){
