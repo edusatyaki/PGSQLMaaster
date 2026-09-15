@@ -1,6 +1,6 @@
 # PostgreSQL Master
 
-The XShare SQL course as **one site**. Six teaching resources that used to live in six separate
+The SQL course as **one site**. Six teaching resources that used to live in six separate
 repositories are merged here — their code, not links to them — sequenced as a single path and
 rebuilt on one design system.
 
