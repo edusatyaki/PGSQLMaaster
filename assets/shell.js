@@ -10,9 +10,8 @@
     { id: "workbook",   step: "01", label: "Workbook",   href: "workbook.html" },
     { id: "reference",  step: "02", label: "Reference",  href: "reference.html" },
     { id: "subqueries", step: "03", label: "Subqueries", href: "subqueries.html" },
-    { id: "windows",    step: "04", label: "Windows",    href: "windows.html" },
-    { id: "roadmap",    step: "05", label: "Roadmap",    href: "roadmap.html" },
-    { id: "rapidfire", step: "06", label: "Rapid fire", href: "rapidfire.html" },
+    { id: "roadmap",    step: "04", label: "Roadmap",    href: "roadmap.html" },
+    { id: "rapidfire", step: "05", label: "Rapid fire", href: "rapidfire.html" },
     { id: "board",      step: "",   label: "Leaderboard", href: "leaderboard.html" }
   ];
 
@@ -137,10 +136,6 @@
       about: "The dataset stays on the left the whole way through. As the trace steps forward, " +
              "<b>exactly the rows the inner query touches light up</b> — so you can watch a " +
              "correlated subquery re-run once per outer row instead of being told that it does." },
-    windows: { title: "Window functions", meta: "12 functions · 6 steps · live controls",
-      about: "Most confusion about window functions is confusion about one question: <b>which rows " +
-             "can the current row see?</b> Change the function, the partition, the ordering or the " +
-             "frame and the window — and the answer — recompute, with the arithmetic spelled out." },
     roadmap: { title: "The roadmap", meta: "379 problems · 14 chapters · 323 LeetCode + 56 HackerRank",
       about: "Tick problems off as you solve them and your progress is saved for the batch. The " +
              "leaderboard <b>ranks on solves confirmed against your real LeetCode and HackerRank " +
