@@ -105,8 +105,11 @@ the deck itself embedded in the panel beside it, so a student never leaves the s
 Modelled on the [Data World](https://satyakidas-sys.github.io/DBMS/) notes site, which is where
 the embed idea and the topic ordering came from.
 
-It is the one page that wears a different skin — near-black with cyan and magenta, a power-on
-before the console opens. Everything is scoped under `.ntmod`, so the neon stays on that page and
+It is the one page that wears a different skin — near-black with cyan and magenta, with a short
+power-on animation. That animation is an intro, not a gate: it clears itself after ~900ms (and is
+skipped entirely under `prefers-reduced-motion`), so the decks are on screen without the reader
+having to press anything. It used to wait for a click, which meant arriving at the page showed an
+empty dark panel and no notes at all. Everything is scoped under `.ntmod`, so the neon stays on that page and
 the shared chrome (top bar, context bar, footer) is unchanged.
 
 | # | Topic | Also appears |

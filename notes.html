@@ -72,7 +72,7 @@
     var $ = function (id) { return document.getElementById(id); };
     var boot = $("ntBoot"), shell = $("ntShell"), list = $("ntList");
     var frame = $("ntFrame"), title = $("ntTitle"), blurb = $("ntBlurb"), page = $("ntPage");
-    var current = -1;
+    var current = -1, turn = 0;
 
     list.innerHTML = NOTES.map(function (n, i) {
       return '<button class="nt-item" type="button" data-i="' + i + '" aria-current="false">' +
@@ -91,7 +91,19 @@
       /* replace rather than reassign src: a fresh iframe avoids adding a history
          entry per deck, so Back leaves the notes instead of walking the decks */
       frame.innerHTML = '<iframe src="' + n.embed + '" title="' + Shell.esc(n.topic) +
-        '" loading="lazy" allowfullscreen allow="fullscreen"></iframe>';
+        '" allow="fullscreen"></iframe>';
+      /* Some browsers and privacy settings refuse third-party frames outright.
+         If the frame has not reported a load shortly, offer the deck directly
+         rather than leaving a black rectangle. */
+      var f = frame.firstChild, ok = false, mine = ++turn;
+      f.addEventListener("load", function () { ok = true; });
+      setTimeout(function () {
+        if (ok || mine !== turn || !frame.firstChild) return;
+        frame.insertAdjacentHTML("beforeend",
+          '<div class="nt-fallback"><p>This deck could not be displayed here — your browser ' +
+          'may be blocking embedded content.</p><a href="' + n.embed.replace(/\?.*$/, "") +
+          '" target="_blank" rel="noopener">Open the deck in a new tab</a></div>');
+      }, 6000);
       [].forEach.call(list.children, function (b, k) {
         b.setAttribute("aria-current", String(k === i));
       });
@@ -102,15 +114,27 @@
       if (b) show(+b.dataset.i);
     });
 
-    function engage(i) {
+    function engage(i, focus) {
       boot.hidden = true;
       shell.hidden = false;
       show(i === undefined ? 0 : i);   /* takes an index so a deep link does not
                                           load deck 0's embed before the real one */
-      var first = list.querySelector(".nt-item");
-      if (first) first.focus();
+      if (focus) {
+        var first = list.querySelector(".nt-item");
+        if (first) first.focus();
+      }
     }
-    $("ntPower").addEventListener("click", function () { engage(); });
+
+    /* The boot screen is an intro, not a gate. It used to wait for a click,
+       which meant a visitor landed on an empty dark panel and saw no notes at
+       all unless they guessed to press it. It now clears itself; clicking just
+       skips ahead, and reduced-motion users never see it. */
+    $("ntPower").addEventListener("click", function () { engage(undefined, true); });
+    if (matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      engage();
+    } else {
+      setTimeout(function () { if (!boot.hidden) engage(); }, 900);
+    }
 
     /* Deep link: notes.html#joins opens that deck. Also on hashchange — moving
        between hashes on the same page does not reload it, so a load-time check
