@@ -188,8 +188,9 @@
     about.innerHTML = '<div class="wrap">' + c.about +
       (decks.length ? '<div class="ctx-notes"><span class="lbl">Lecture notes</span>' +
         decks.map(function (n) {
-          return '<a href="' + n.url + '" target="_blank" rel="noopener">' +
-                 esc(n.topic) + ' <span aria-hidden="true">\u2197</span></a>';
+          /* in-site: opens the deck in the notes console, so the provider's URL
+             is never put in front of the reader */
+          return '<a href="' + root.noteHref(n) + '">' + esc(n.topic) + "</a>";
         }).join("") + "</div>" : "") +
       "</div>";
 

@@ -118,15 +118,21 @@ the shared chrome (top bar, context bar, footer) is unchanged.
 | 05 | Correlated subqueries | step 03's *About this step* panel |
 | 06 | Normalisation | — |
 
-The decks live in `assets/notes.js`, each with a `view` URL for opening in Canva and an `embed`
-URL (`?embed&hide_controls=1`) for the console. A deck given a `step` key matching a nav id also
-renders under that step's About panel — that is how the two subquery decks reach step 03.
+The decks live in `assets/notes.js`. Each carries a base64 key rather than a URL; the host and
+the id are assembled at runtime, and there is no outbound link — a deck attached to a step links
+to `notes.html#<topic>`, not off-site. A deck given a `step` key matching a nav id renders under
+that step's About panel, which is how the two subquery decks reach step 03.
+
+**On masking:** the provider is not named anywhere a reader will look, but this is obfuscation,
+not access control. The browser has to fetch the embed, so the iframe's `src` is visible in
+devtools to anyone who opens them. Treat the decks as published, and use the provider's own link
+sharing if any of them should be restricted. If a deck is not publicly shared, students will see
+a sign-in wall in the panel instead of the slides.
 
 Deep links work: `notes.html#joins` opens that deck directly, on load and on hash change.
 
-The decks are hosted on Canva, so this is the one part of the site that is not self-contained.
-If a deck's Canva sharing is not public, students will see a sign-in wall in the panel rather
-than the slides.
+The console runs full-bleed like the other app pages, and the frame is held at 16:9 so the decks
+fill it — at the document measure it was 1.44:1 and every deck sat between black bands.
 
 ## Full screen
 

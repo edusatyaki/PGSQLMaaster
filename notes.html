@@ -8,18 +8,18 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234d9bff' stroke-width='2'%3E%3Cellipse cx='12' cy='5.5' rx='8' ry='3'/%3E%3Cpath d='M4 5.5v13c0 1.7 3.6 3 8 3s8-1.3 8-3v-13M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3'/%3E%3C/svg%3E">
 <link rel="stylesheet" href="assets/theme.css">
 <link rel="stylesheet" href="assets/notes.css">
-<style>.nthost{background:var(--ground); padding:18px 0 34px}</style>
+<style>.nthost{flex:1; min-height:0; display:flex; flex-direction:column}</style>
 </head>
-<body class="app">
+<body class="fixed">
 
 <header data-shell></header>
 
 <div data-ctx></div>
 
 <main>
-<div class="nthost">
+<div class="fillhost">
   <div class="wrap">
-    <section class="ntmod" id="ntmod" aria-label="Lecture notes console">
+    <section class="ntmod" id="ntmod" data-fs-target aria-label="Lecture notes console">
 
       <div class="nt-boot" id="ntBoot">
         <button class="nt-power" id="ntPower" type="button" aria-label="Open the lecture notes">
@@ -46,9 +46,9 @@
               <span class="dot" aria-hidden="true"></span>
               <span class="ttl" id="ntTitle"></span>
               <span class="fill"></span>
-              <a id="ntOpen" href="#" target="_blank" rel="noopener">Open in Canva ↗</a>
+              <span class="nt-page" id="ntPage"></span>
             </div>
-            <div class="nt-frame" id="ntFrame"></div>
+            <div class="nt-stage"><div class="nt-frame" id="ntFrame"></div></div>
             <p class="nt-blurb" id="ntBlurb"></p>
           </div>
         </div>
@@ -71,7 +71,7 @@
     "use strict";
     var $ = function (id) { return document.getElementById(id); };
     var boot = $("ntBoot"), shell = $("ntShell"), list = $("ntList");
-    var frame = $("ntFrame"), title = $("ntTitle"), blurb = $("ntBlurb"), open = $("ntOpen");
+    var frame = $("ntFrame"), title = $("ntTitle"), blurb = $("ntBlurb"), page = $("ntPage");
     var current = -1;
 
     list.innerHTML = NOTES.map(function (n, i) {
@@ -86,7 +86,8 @@
       var n = NOTES[i];
       title.textContent = n.topic;
       blurb.textContent = n.blurb;
-      open.href = n.url;
+      page.textContent = String(i + 1).padStart(2, "0") + " / " +
+                         String(NOTES.length).padStart(2, "0");
       /* replace rather than reassign src: a fresh iframe avoids adding a history
          entry per deck, so Back leaves the notes instead of walking the decks */
       frame.innerHTML = '<iframe src="' + n.embed + '" title="' + Shell.esc(n.topic) +
