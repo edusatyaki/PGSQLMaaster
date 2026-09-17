@@ -40,9 +40,9 @@
       k: "REFHejlmR2ZmcVEvVGptOVozQWpjWTZyTWdUakhkQVcyZw==",
       step: "subqueries" },
 
-    { topic: "Normalisation",
-      blurb: "1NF through 3NF — removing the redundancy that lets a table contradict itself.",
-      k: "REFHM1ZMTGJjRGMvZUVUdGNCd0dES2NweHhnTERLN0lrQQ==" }
+    { topic: "Window functions",
+      blurb: "Ranking, running totals and frames — one row per row in, unlike GROUP BY.",
+      k: "REFHOFVzVUI3N1UvXzQ0V2I5QWNud3ZOTy1nNzlZVVBkdw==" }
   ];
 
   /* Only the embed form is built — there is no outbound link any more. */

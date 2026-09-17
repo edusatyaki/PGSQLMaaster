@@ -119,7 +119,7 @@ the shared chrome (top bar, context bar, footer) is unchanged.
 | 03 | Set operations | — |
 | 04 | Non-correlated subqueries | step 03's *About this step* panel |
 | 05 | Correlated subqueries | step 03's *About this step* panel |
-| 06 | Normalisation | — |
+| 06 | Window functions | — |
 
 The decks live in `assets/notes.js`. Each carries a base64 key rather than a URL; the host and
 the id are assembled at runtime, and there is no outbound link — a deck attached to a step links
